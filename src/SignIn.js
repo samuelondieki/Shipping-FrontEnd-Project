@@ -11,7 +11,7 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import BoxDimension from "./BoxDimension";
-
+import ConfirmCode from "./ConfirmCode";
 
 const styles = theme => ({
   "@global": {
@@ -38,11 +38,11 @@ const styles = theme => ({
   },
   button: {
     display: "inline",
-    margin: theme.spacing.unit*1,
+    margin: theme.spacing.unit * 1,
     marginTop: theme.spacing.unit * 2
   },
   formControl: {
-    margin: theme.spacing.unit*1,
+    margin: theme.spacing.unit * 1,
     minWidth: 120
   }
 });
@@ -51,7 +51,7 @@ class SignIn extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      action: "login",
+      //action: "login",
       email: "",
       password: "",
       token: "",
@@ -62,10 +62,16 @@ class SignIn extends React.Component {
       description: "",
       code: ""
     };
+    console.log("Log in status:", this.state.isLoggedIn);
   }
 
+  //handle change 
+  handleChange = event => {
+    this.setState({ [event.target.name]: event.target.value });
+  };
+
   //login a user
-  login() {
+  login = () => {
     let url = `https://api.wynum.com/loginapi?username=${
       this.state.email
     }&password=${this.state.password}`;
@@ -79,21 +85,21 @@ class SignIn extends React.Component {
         // this.getTodos()
 
         this.setState({ isLoggedIn: true });
-        return <BoxDimension />;
+        return <BoxDimension/>;
       }
 
       if (data["value"] === 0) {
         this.setState({ showCodeCard: true });
 
-        return;
+        return <ConfirmCode/>;
       }
 
       if (data["error"] === "Email not confirmed") {
         this.setState({ showCodeCard: true });
-        return "whaaaaat";
+        return;
       }
     });
-  }
+  };
 
   //confirmation code
   confirmCode() {
@@ -156,6 +162,8 @@ class SignIn extends React.Component {
               name="email"
               autoComplete="email"
               autoFocus
+              value={this.state.email}
+              onChange={this.handleChange}
             />
             <TextField
               variant="outlined"
@@ -166,27 +174,22 @@ class SignIn extends React.Component {
               label="Password"
               type="password"
               id="password"
+              value={this.state.password}
+              onChange={this.handleChange}
               autoComplete="current-password"
             />
             <Grid item xs={12}>
               <Button
-                type="submit"
+                
                 fullWidth
                 variant="contained"
                 color="primary"
-                onClick={this.login()}
+                onClick={() => {
+                  this.login();
+                }}
                 className={classes.submit}
               >
-                Sign In
-              </Button>
-              <Button
-                onClick={this.displayScreen}
-                fullWidth
-                variant="contained"
-                color="primary"
-                className={classes.submit}
-              >
-                Sign Up
+                Sign In / Sign Up
               </Button>
             </Grid>
           </form>
