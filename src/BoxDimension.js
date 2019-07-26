@@ -6,10 +6,11 @@ import Grid from "@material-ui/core/Grid";
 import { spacing } from "@material-ui/system";
 import { withStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
+import PropTypes from "prop-types";
 import Fab from "@material-ui/core/Fab";
 import axios from "axios";
 
-const Styles = makeStyles(theme => ({
+const styles = theme =>  ({
   root: {
     display: "flex"
   },
@@ -27,7 +28,7 @@ const Styles = makeStyles(theme => ({
   menu: {
     width: 200
   }
-}));
+});
 
 class BoxDimension extends React.Component {
   constructor(props) {
@@ -136,4 +137,8 @@ class BoxDimension extends React.Component {
     );
   }
 }
-export default BoxDimension;
+BoxDimension.propTypes = {
+  classes: PropTypes.object.isRequired
+};
+
+export default withStyles(styles)(BoxDimension);
