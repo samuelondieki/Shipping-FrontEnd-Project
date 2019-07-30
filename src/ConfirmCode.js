@@ -54,14 +54,12 @@ class confirmationPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-     
       isLoggedIn: false,
       showCodeCard: false,
-     
+
       code: ""
     };
   }
-
 
   //confirmation code
   confirmCode() {
@@ -78,70 +76,46 @@ class confirmationPage extends React.Component {
     });
   }
 
-   //adding project
-   addProject() {
-    let url = `https://api.wynum.com/authapitoken?apitoken=${
-      this.apiToken
-    }&token=${this.token}`;
-    axios.post(url).then(res => {
-      console.log(res.data);
-      this.getTodos();
-    });
-  }
-
-  //get todos 
-  getTodos() {
-    let url = `https://api.wynum.com/getallStage/71f71ac6b3200cdd83ef34725b9aa501?user_email=${this.email}&token=${this.token}`
-    axios.get(url).then((res) => {
-      console.log(res.data)
-      this.todos = res.data;
-    })
-  }
-
-
-
-
   render() {
     const { classes } = this.props;
     return (
       <Container component="main" maxWidth="xs">
-      <CssBaseline />
-      <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Confirmation code
-        </Typography>
-        <form className={classes.form} noValidate>
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            id="code"
-            label="Enter code"
-            name="code"
-            autoComplete="off"
-            autoFocus
-          />
-         
-          <Grid item xs={12}>
-           
-            <Button
-              type="submit"
+        <CssBaseline />
+        <div className={classes.paper}>
+          <Avatar className={classes.avatar}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Confirmation code
+          </Typography>
+          <form className={classes.form} noValidate>
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
               fullWidth
-              variant="contained"
-              color="primary"
-              onClick={this.confirmCode()}
-              className={classes.submit}
-            >
-              Submit
-            </Button>
-          </Grid>
-        </form>
-      </div>
-    </Container>
+              id="code"
+              label="Enter code"
+              name="code"
+              autoComplete="off"
+              autoFocus
+            />
+
+            <Grid item xs={12}>
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                color="primary"
+                onClick={this.confirmCode()}
+                className={classes.submit}
+              >
+                Submit
+              </Button>
+            </Grid>
+          </form>
+        </div>
+      </Container>
     );
   }
 }

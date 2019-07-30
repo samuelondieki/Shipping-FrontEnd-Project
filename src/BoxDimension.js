@@ -6,27 +6,47 @@ import Grid from "@material-ui/core/Grid";
 import { spacing } from "@material-ui/system";
 import { withStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
+import Container from "@material-ui/core/Container";
+import Avatar from "@material-ui/core/Avatar";
 import PropTypes from "prop-types";
+import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+import Typography from "@material-ui/core/Typography";
+import CssBaseline from "@material-ui/core/CssBaseline";
+
 import Fab from "@material-ui/core/Fab";
 import axios from "axios";
 
-const styles = theme =>  ({
-  root: {
-    display: "flex"
+const styles = theme => ({
+  "@global": {
+    body: {
+      backgroundColor: theme.palette.common.white
+    }
   },
-  container: {
+  paper: {
+    marginTop: theme.spacing(8),
     display: "flex",
-    flexWrap: "wrap"
+    flexDirection: "column",
+    alignItems: "center"
   },
-  textField: {
-    marginLeft: 12,
-    marginRight: 36
+  avatar: {
+    margin: theme.spacing(1),
+    backgroundColor: theme.palette.secondary.main
   },
-  dense: {
-    marginTop: 20
+  form: {
+    width: "100%", // Fix IE 11 issue.
+    marginTop: theme.spacing(1)
   },
-  menu: {
-    width: 200
+  submit: {
+    margin: theme.spacing(3, 0, 2)
+  },
+  button: {
+    display: "inline",
+    margin: theme.spacing.unit,
+    marginTop: theme.spacing.unit * 2
+  },
+  formControl: {
+    margin: theme.spacing.unit,
+    minWidth: 120
   }
 });
 
@@ -70,10 +90,17 @@ class BoxDimension extends React.Component {
   };
 
   render() {
-    // const { classes } = Styles();
+    const { classes } = this.props;
     return (
-      <Grid container spacing={24}>
-        <Grid item xs={12}>
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <div className={classes.paper}>
+          <Avatar className={classes.avatar}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Box Dimension
+          </Typography>
           <TextField
             id="outlined-name"
             label="Process ID"
@@ -83,8 +110,7 @@ class BoxDimension extends React.Component {
             margin="normal"
             variant="outlined"
           />
-        </Grid>
-        <Grid item xs={12}>
+
           <TextField
             id="outlined-name"
             label="Length"
@@ -94,8 +120,7 @@ class BoxDimension extends React.Component {
             margin="normal"
             variant="outlined"
           />
-        </Grid>
-        <Grid item xs={12}>
+
           <TextField
             id="outlined-name"
             label="Width"
@@ -105,8 +130,7 @@ class BoxDimension extends React.Component {
             margin="normal"
             variant="outlined"
           />
-        </Grid>
-        <Grid item xs={12}>
+
           <TextField
             id="outlined-name"
             label="Height"
@@ -116,8 +140,7 @@ class BoxDimension extends React.Component {
             margin="normal"
             variant="outlined"
           />
-        </Grid>
-        <Grid item xs={12}>
+
           <TextField
             id="outlined-name"
             label="Weight"
@@ -127,13 +150,18 @@ class BoxDimension extends React.Component {
             margin="normal"
             variant="outlined"
           />
-        </Grid>
-        <Grid item xs={12}>
-          <Fab variant="extended" aria-label="delete" onClick={this.addBox()}>
+
+          <Fab
+            variant="extended"
+            aria-label="delete"
+            color="primary"
+            onClick={this.addBox()}
+            className={classes.submit}
+          >
             Submit
           </Fab>
-        </Grid>
-      </Grid>
+        </div>
+      </Container>
     );
   }
 }

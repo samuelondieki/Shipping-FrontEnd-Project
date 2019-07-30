@@ -7,8 +7,8 @@ class App extends React.Component {
     return (
       <div className="App">
         <SignIn />
-        {/* <ConfirmCode /> */}
-        
+        {/* <ConfirmCode/> */}
+        {/* <BoxDimension/> */}
       </div>
     );
   }

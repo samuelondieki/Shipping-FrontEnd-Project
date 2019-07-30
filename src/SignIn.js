@@ -6,12 +6,14 @@ import TextField from "@material-ui/core/TextField";
 import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import PropTypes from "prop-types";
+import swal from "sweetalert";
 import axios from "axios";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import BoxDimension from "./BoxDimension";
 import ConfirmCode from "./ConfirmCode";
+import { SwipeableDrawer } from "@material-ui/core";
 
 const styles = theme => ({
   "@global": {
@@ -51,7 +53,7 @@ class SignIn extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      //action: "login",
+      action: "login",
       email: "",
       password: "",
       token: "",
@@ -62,40 +64,45 @@ class SignIn extends React.Component {
       description: "",
       code: ""
     };
-    console.log("Log in status:", this.state.isLoggedIn);
+    this.changeToConfirm = this.changeToConfirm.bind(this)
   }
 
-  //handle change 
+  //handle change
   handleChange = event => {
     this.setState({ [event.target.name]: event.target.value });
   };
 
+  //change page to confirm code
+  changeToConfirm = () => {
+    this.props.changeScreen("box");
+  };
   //login a user
   login = () => {
     let url = `https://api.wynum.com/loginapi?username=${
       this.state.email
     }&password=${this.state.password}`;
-
+    console.log("Log in status:", this.state.isLoggedIn);
     axios.post(url).then(res => {
       console.log(res.data);
       let data = res.data;
+      console.log("Token passed in to data:", data["Token"]);
+
       if (data["Token"]) {
         this.setState({ token: data["Token"] });
         this.addProject();
         // this.getTodos()
-
         this.setState({ isLoggedIn: true });
-        return <BoxDimension/>;
+        return;
       }
 
+      console.log("Log in status:", this.state.isLoggedIn);
       if (data["value"] === 0) {
-        this.setState({ showCodeCard: true });
-
-        return <ConfirmCode/>;
+        this.state.showCodeCard = true;
+        return;
       }
 
       if (data["error"] === "Email not confirmed") {
-        this.setState({ showCodeCard: true });
+        this.state.showCodeCard = true;
         return;
       }
     });
@@ -180,13 +187,11 @@ class SignIn extends React.Component {
             />
             <Grid item xs={12}>
               <Button
-                
                 fullWidth
                 variant="contained"
                 color="primary"
-                onClick={() => {
-                  this.login();
-                }}
+                // type="submit"
+                onClick={this.changeToConfirm}
                 className={classes.submit}
               >
                 Sign In / Sign Up
