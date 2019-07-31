@@ -61,6 +61,26 @@ class confirmationPage extends React.Component {
     };
   }
 
+  //get todos
+  getTodos() {
+    let url = `https://api.wynum.com/getallStage/71f71ac6b3200cdd83ef34725b9aa501?user_email=${
+      this.state.email
+    }&token=${this.state.token}`;
+    axios.get(url).then(res => {
+      console.log(res.data);
+      this.state.todos = res.data;
+    });
+  }
+  //adding project
+  addProject() {
+    let url = `https://api.wynum.com/authapitoken?apitoken=${
+      this.state.apiToken
+    }&token=${this.state.token}`;
+    axios.post(url).then(res => {
+      console.log(res.data);
+      this.getTodos();
+    });
+  }
   //confirmation code
   confirmCode() {
     let url = `https://api.wynum.com/confirmapicode?code=${this.state.code}`;
@@ -72,6 +92,12 @@ class confirmationPage extends React.Component {
         this.token = data["Token"];
         this.addProject();
         this.isLoggedIn = true;
+
+        // if ((this.state.isLoggedIn = true)) {
+        //   this.props.changeScreen("box");
+        // } else {
+        //   this.props.changeScreen("confirm");
+        // }
       }
     });
   }

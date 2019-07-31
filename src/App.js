@@ -2,11 +2,14 @@ import React from "react";
 import BoxDimension from "./BoxDimension";
 import SignIn from "./SignIn";
 import ConfirmCode from "./ConfirmCode";
+import UserScreen from "./UserScreen";
 class App extends React.Component {
   render() {
     return (
       <div className="App">
-        <SignIn />
+        
+<UserScreen/>
+        {/* <SignIn /> */}
         {/* <ConfirmCode/> */}
         {/* <BoxDimension/> */}
       </div>

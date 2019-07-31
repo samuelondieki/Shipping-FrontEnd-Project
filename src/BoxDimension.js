@@ -85,7 +85,7 @@ class BoxDimension extends React.Component {
     }`;
     var config = { headers: { "Content-Type": "application/json" } };
     axios.post(url, JSON.stringify(box), config).then(res => {
-      console.log(res.data);
+     // console.log(res.data);
     });
   };
 

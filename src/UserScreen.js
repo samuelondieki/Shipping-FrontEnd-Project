@@ -20,14 +20,13 @@ class UserScreen extends React.Component {
     return (
       <div>
         {this.state.screen === "sign" && (
-          <BoxDimension changeScreen={this.changeScreen} />
-        )}
-
-        {this.state.screen === "confirm" && (
-          <ConfirmCode changeScreen={this.changeScreen} />
+          <SignIn changeScreen={this.changeScreen} />
         )}
         {this.state.screen === "box" && (
-          <SignIn changeScreen={this.changeScreen} />
+          <BoxDimension changeScreen={this.changeScreen} />
+        )}
+        {this.state.screen === "confirm" && (
+          <ConfirmCode changeScreen={this.changeScreen} />
         )}
       </div>
     );

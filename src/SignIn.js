@@ -54,7 +54,7 @@ class SignIn extends React.Component {
     super(props);
     this.state = {
       action: "login",
-      email: "",
+      email: "samuel.b@evermethod.com",
       password: "",
       token: "",
       apiToken: 8846051,
@@ -64,7 +64,6 @@ class SignIn extends React.Component {
       description: "",
       code: ""
     };
-    this.changeToConfirm = this.changeToConfirm.bind(this)
   }
 
   //handle change
@@ -74,36 +73,36 @@ class SignIn extends React.Component {
 
   //change page to confirm code
   changeToConfirm = () => {
-    this.props.changeScreen("box");
+    this.login();
   };
   //login a user
   login = () => {
     let url = `https://api.wynum.com/loginapi?username=${
       this.state.email
     }&password=${this.state.password}`;
-    console.log("Log in status:", this.state.isLoggedIn);
+
     axios.post(url).then(res => {
       console.log(res.data);
       let data = res.data;
       console.log("Token passed in to data:", data["Token"]);
-
+      console.log("Log in status:", this.state.isLoggedIn);
       if (data["Token"]) {
         this.setState({ token: data["Token"] });
         this.addProject();
-        // this.getTodos()
+        this.getTodos();
         this.setState({ isLoggedIn: true });
-        return;
+        this.props.changeScreen("box");
       }
 
       console.log("Log in status:", this.state.isLoggedIn);
       if (data["value"] === 0) {
         this.state.showCodeCard = true;
-        return;
+        this.props.changeScreen("confirm");
       }
 
       if (data["error"] === "Email not confirmed") {
         this.state.showCodeCard = true;
-        return;
+        this.props.changeScreen("confirm");
       }
     });
   };
