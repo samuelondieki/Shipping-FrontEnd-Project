@@ -80,6 +80,7 @@ class BoxDimension extends React.Component {
     }
     return result;
   };
+  
 
   //post request to add box
   addBox = () => {
