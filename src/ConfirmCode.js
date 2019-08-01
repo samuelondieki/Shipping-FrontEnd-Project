@@ -89,15 +89,10 @@ class confirmationPage extends React.Component {
       let data = res.data;
       console.log(data["Token"]);
       if (data["Token"]) {
-        this.token = data["Token"];
-        this.addProject();
-        this.isLoggedIn = true;
+        this.setState({ token: data["Token"] });
 
-        // if ((this.state.isLoggedIn = true)) {
-        //   this.props.changeScreen("box");
-        // } else {
-        //   this.props.changeScreen("confirm");
-        // }
+        this.addProject();
+        this.setState({ isLoggedIn: true });
       }
     });
   }

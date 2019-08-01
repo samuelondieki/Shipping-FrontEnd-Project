@@ -6,14 +6,10 @@ import TextField from "@material-ui/core/TextField";
 import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import PropTypes from "prop-types";
-import swal from "sweetalert";
 import axios from "axios";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
-import BoxDimension from "./BoxDimension";
-import ConfirmCode from "./ConfirmCode";
-import { SwipeableDrawer } from "@material-ui/core";
 
 const styles = theme => ({
   "@global": {
@@ -57,7 +53,7 @@ class SignIn extends React.Component {
       email: "samuel.b@evermethod.com",
       password: "",
       token: "",
-      apiToken: 8846051,
+      apiToken: 9640783,
       isLoggedIn: false,
       showCodeCard: false,
       todos: [],
@@ -74,7 +70,16 @@ class SignIn extends React.Component {
   //change page to confirm code
   changeToConfirm = () => {
     this.login();
+    // if (!this.state.isLoggedIn && !this.state.showCodeCard) {
+    //   this.props.changeScreen("sign");
+    //   console.log(this.state.isLoggedIn);
+    // } else if (!this.state.isLoggedIn && this.state.showCodeCard) {
+    // this.props.changeScreen("confirm");
+    // } else if (this.state.isLoggedIn) {
+    //   this.props.changeScreen("box");
+    // }
   };
+
   //login a user
   login = () => {
     let url = `https://api.wynum.com/loginapi?username=${
@@ -91,18 +96,34 @@ class SignIn extends React.Component {
         this.addProject();
         this.getTodos();
         this.setState({ isLoggedIn: true });
-        this.props.changeScreen("box");
       }
 
       console.log("Log in status:", this.state.isLoggedIn);
-      if (data["value"] === 0) {
-        this.state.showCodeCard = true;
+      if (this.state.isLoggedIn === true) {
+        this.props.changeScreen("box");
+        console.log(this.state.isLoggedIn);
+      } else if (
+        this.state.isLoggedIn === false &&
+        this.state.showCodeCard === false
+      ) {
+        this.props.changeScreen("sign");
+      } else if (
+        this.state.isLoggedIn === false &&
+        this.state.showCodeCard === false
+      ) {
+      } else if (
+        this.state.isLoggedIn === false &&
+        this.state.showCodeCard === true
+      ) {
         this.props.changeScreen("confirm");
       }
 
+      if (data["value"] === 0) {
+        this.setState({ showCodeCard: true });
+      }
+
       if (data["error"] === "Email not confirmed") {
-        this.state.showCodeCard = true;
-        this.props.changeScreen("confirm");
+        this.setState({ showCodeCard: true });
       }
     });
   };
@@ -136,12 +157,14 @@ class SignIn extends React.Component {
 
   //get todos
   getTodos() {
-    let url = `https://api.wynum.com/getallStage/71f71ac6b3200cdd83ef34725b9aa501?user_email=${
+    let url = `https://api.wynum.com/getallStage/63ab151382791f6eeffc70ae383daf71?user_email=${
       this.state.email
     }&token=${this.state.token}`;
+
     axios.get(url).then(res => {
       console.log(res.data);
-      this.state.todos = res.data;
+      // this.state.todos = res.data;
+      this.setState({ todos: res.data });
     });
   }
 

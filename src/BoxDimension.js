@@ -54,19 +54,31 @@ class BoxDimension extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      process_ID: "",
       length: "",
       width: "",
       height: "",
       weight: "",
-      token: "",
-      apiToken: "9640783"
+      token: this.props.token,
+      apiToken: 9640783
     };
     this.handleChange = this.handleChange.bind(this);
+    console.log(this.state.token)
   }
 
   handleChange = event => {
     this.setState({ [event.target.name]: event.target.value });
+  };
+
+  //handle random process ID generation
+  makeid = length => {
+    var result = "";
+    var characters =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    var charactersLength = characters.length;
+    for (var i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
   };
 
   //post request to add box
@@ -74,18 +86,19 @@ class BoxDimension extends React.Component {
     var boxContext = this;
 
     var box = {
-      process_ID: boxContext.state.process_ID,
+      id: this.makeid(4),
       Length: boxContext.state.length,
       Width: boxContext.state.width,
       Height: boxContext.state.height,
       Weight: boxContext.state.weight
     };
+    console.log("token:", this.props.token)
     const url = `https://api.wynum.com/postStage/c02a19c943023456484c903018ee9708?token=${
-      this.token
+      this.props.token
     }`;
-    var config = { headers: { "Content-Type": "application/json" } };
+    var config = { headers: {" Content-Type": "application/json" } };
     axios.post(url, JSON.stringify(box), config).then(res => {
-     // console.log(res.data);
+      console.log(res.data);
     });
   };
 
@@ -101,7 +114,7 @@ class BoxDimension extends React.Component {
           <Typography component="h1" variant="h5">
             Box Dimension
           </Typography>
-          <TextField
+          {/* <TextField
             id="outlined-name"
             label="Process ID"
             //className={classes.textField}
@@ -109,7 +122,7 @@ class BoxDimension extends React.Component {
             onChange={this.handleChange}
             margin="normal"
             variant="outlined"
-          />
+          /> */}
 
           <TextField
             id="outlined-name"
@@ -158,7 +171,7 @@ class BoxDimension extends React.Component {
             onClick={this.addBox()}
             className={classes.submit}
           >
-            Submit
+            ADD BOX
           </Fab>
         </div>
       </Container>
