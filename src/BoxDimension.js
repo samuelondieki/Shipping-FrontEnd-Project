@@ -160,6 +160,10 @@ class BoxDimension extends React.Component {
           >
             Submit
           </Fab>
+          <Button onClick ={(() =>
+                this.props.changeScreen("Display"))} >
+                Click me Click me
+              </Button>
         </div>
       </Container>
     );

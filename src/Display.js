@@ -12,6 +12,7 @@ import PropTypes from "prop-types";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import CssBaseline from "@material-ui/core/CssBaseline";
+import signin from "./SignIn";
 
 // import Fab from "@material-ui/core/Fab";
 import axios from "axios";
@@ -50,53 +51,43 @@ const styles = theme => ({
     }
   });
   
-  class SystemDisplay extends React.Component {
+  class Display extends React.Component {
     constructor(props) {
       super(props);
       this.state = {
-        process_ID: "",
+        process_ID: "16",
+        boxes: [],
+        users: [] 
         
       };
       this.handleChange = this.handleChange.bind(this);
+      console.log("Boxes from sign in page: ",this.props.getBoxes())
     }
   
     handleChange = event => {
       this.setState({ [event.target.name]: event.target.value });
     };
   
-    //post request to add box
-    // addBox = () => {
-    //   var boxContext = this;
-  
-    //   var box = {
-    //     process_ID: boxContext.state.process_ID,
-    //     Length: boxContext.state.length,
-    //     Width: boxContext.state.width,
-    //     Height: boxContext.state.height,
-    //     Weight: boxContext.state.weight
-    //   };
-    //   const url = `https://api.wynum.com/postStage/c02a19c943023456484c903018ee9708?token=${
-    //     this.token
-    //   }`;
-    //   var config = { headers: { "Content-Type": "application/json" } };
-    //   axios.post(url, JSON.stringify(box), config).then(res => {
-    //    // console.log(res.data);
-    //   });
-    // };
+ 
 
-    //get todos
-     getTodos() {
-    let url = `https://api.wynum.com/getallStage/71f71ac6b3200cdd83ef34725b9aa501?user_email=${
-      this.state.email
-    }&token=${this.state.token}`;
+    
+     getBoxes() {
+    let url = `https://api.wynum.com/getallStage/0b4f81c827700d711263e4d75a395609?token=${this.state.token}`;
+    //let url = `https://api.wynum.com/getallStage/71f71ac6b3200cdd83ef34725b9aa501?user_email=${this.state.email}&token=${this.state.token}`;
     axios.get(url).then(res => {
-      console.log(res.data);
-      this.state.todos = res.data;
+     // console.log(res.data);
+      this.state.boxes = res.data
     });
+  }
+
+  componentDidMount(){
+    this.getBoxes()
   }
   
     render() {
       const { classes } = this.props;
+      const types = this.state;
+      const number = [1,2,3,4,5]; 
       return (
         <Container component="main" maxWidth="xs">
           <CssBaseline />
@@ -107,6 +98,15 @@ const styles = theme => ({
             <Typography component="h1" variant="h5">
               Shipping Calculator Transaction
             </Typography>
+            <div>
+            <ul>
+              {types.boxes.map(box =>(
+                <li key ={box.id}>
+                  Total Boxes: {box.Total_Boxes} | Total Weight: {box.Total_Palette_Weight}
+                </li>
+              ))}
+              </ul>
+            </div>
             <TextField
               id="outlined-name"
               label="Total number of boxes on Pallet"
@@ -171,9 +171,9 @@ const styles = theme => ({
       );
     }
   }
-  BoxDimension.propTypes = {
+  Display.propTypes = {
     classes: PropTypes.object.isRequired
   };
   
-  export default withStyles(styles)(BoxDimension);
+  export default withStyles(styles)(Display);
   

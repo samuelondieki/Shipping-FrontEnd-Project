@@ -14,6 +14,7 @@ import Container from "@material-ui/core/Container";
 import BoxDimension from "./BoxDimension";
 import ConfirmCode from "./ConfirmCode";
 import { SwipeableDrawer } from "@material-ui/core";
+import Display from "./Display";
 
 const styles = theme => ({
   "@global": {
@@ -54,7 +55,7 @@ class SignIn extends React.Component {
     super(props);
     this.state = {
       action: "login",
-      email: "samuel.b@evermethod.com",
+      email: "patrick.m@evermethod.com",
       password: "",
       token: "",
       apiToken: 8846051,
@@ -62,7 +63,8 @@ class SignIn extends React.Component {
       showCodeCard: false,
       todos: [],
       description: "",
-      code: ""
+      code: "",
+      boxes: []
     };
   }
 
@@ -89,7 +91,7 @@ class SignIn extends React.Component {
       if (data["Token"]) {
         this.setState({ token: data["Token"] });
         this.addProject();
-        this.getTodos();
+        this.getBoxes();
         this.setState({ isLoggedIn: true });
         this.props.changeScreen("box");
       }
@@ -130,23 +132,47 @@ class SignIn extends React.Component {
     }&token=${this.state.token}`;
     axios.post(url).then(res => {
       console.log(res.data);
-      this.getTodos();
+      this.getBoxes();
     });
   }
 
-  //get todos
-  getTodos() {
-    let url = `https://api.wynum.com/getallStage/71f71ac6b3200cdd83ef34725b9aa501?user_email=${
-      this.state.email
-    }&token=${this.state.token}`;
+  // //get todos
+  // getTodos() {
+  //   let url = `https://api.wynum.com/getallStage/71f71ac6b3200cdd83ef34725b9aa501?token=${this.state.token}`;
+    
+  //   axios.get(url).then(res => {
+  //     console.log(res.json);
+  //     this.state.todos = res.json;
+  //   });
+  // }
+
+  getBoxes() {
+    let url = `https://api.wynum.com/getallStage/0b4f81c827700d711263e4d75a395609?token=${this.state.token}`;
+    //let url = `https://api.wynum.com/getallStage/71f71ac6b3200cdd83ef34725b9aa501?user_email=${this.state.email}&token=${this.state.token}`;
     axios.get(url).then(res => {
       console.log(res.data);
-      this.state.todos = res.data;
+      this.state.boxes = res.data 
     });
+  }
+
+  getSomething() {
+    let url = `https://api.wynum.com/getallStage/0b4f81c827700d711263e4d75a395609?token=${this.state.token}`;
+    //let url = `https://api.wynum.com/getallStage/71f71ac6b3200cdd83ef34725b9aa501?user_email=${this.state.email}&token=${this.state.token}`;
+    axios.get(url).then(res => {
+     console.log("Something",res.data);
+      this.state.boxes = res.data
+    });
+  }
+
+
+  componentDidMount(){
+    this.getBoxes()
   }
 
   render() {
     const { classes } = this.props;
+    var {boxes} = this.state;
+    const number = [1,2,3,4,5];
     return (
       <Container component="main" maxWidth="xs">
         <CssBaseline />
@@ -157,6 +183,15 @@ class SignIn extends React.Component {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
+          {/* <div>
+            <ul>
+          {boxes.map(box =>(
+                <li>
+                  Total Boxes: {box.Total_Boxes} | Total Weight: {box.Total_Palette_Weight}
+                </li>
+              ))}
+            </ul>
+          </div> */}
           <form className={classes.form} noValidate>
             <TextField
               variant="outlined"
@@ -195,6 +230,10 @@ class SignIn extends React.Component {
               >
                 Sign In / Sign Up
               </Button>
+              {/* <Button onClick ={(() =>
+                this.props.changeScreen("Display"))} >
+                Click me Click me
+              </Button> */}
             </Grid>
           </form>
         </div>
