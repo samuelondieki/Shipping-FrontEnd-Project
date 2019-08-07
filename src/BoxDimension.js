@@ -58,19 +58,14 @@ class BoxDimension extends React.Component {
       width: "",
       height: "",
       weight: "",
+      boxes: [],
       token: props.userToken,
       apiToken: 9640783
     };
-    this.handleChange = this.handleChange.bind(this);
-    console.log(this.state.token);
   }
 
   handleChange = event => {
     this.setState({ [event.target.name]: event.target.value });
-  };
-  //testing how to pass stuff from one component to another
-  testFunction = () => {
-    console.log("Box:", this.state.token);
   };
 
   //handle random process ID generation
@@ -89,19 +84,23 @@ class BoxDimension extends React.Component {
   addBox = () => {
     var boxContext = this;
 
-    var box = {
-      process_ID: this.makeid(4),
-      Length: boxContext.state.length,
-      Width: boxContext.state.width,
-      Height: boxContext.state.height,
-      Weight: boxContext.state.weight
+    let box = {
+      Length: this.state.length,
+      Width: this.state.width,
+      Height: this.state.height,
+      Weight: this.state.weight,
+      process_ID: this.makeid(6)
     };
+
+    this.state.boxes.splice(0, 0, box);
     console.log("token:", this.state.token);
     const url = `https://api.wynum.com/postStage/c02a19c943023456484c903018ee9708?token=${
       this.state.token
     }`;
+    console.log("box", box);
     var config = { headers: { "Content-Type": "application/json" } };
     axios.post(url, JSON.stringify(box), config).then(res => {
+      console.log("box after ", box);
       console.log(res.data);
     });
   };
@@ -118,22 +117,16 @@ class BoxDimension extends React.Component {
           <Typography component="h1" variant="h5">
             Box Dimension
           </Typography>
-          {/* <TextField
-            id="outlined-name"
-            label="Process ID"
-            //className={classes.textField}
-            // value={this.state.process_ID}
-            onChange={this.handleChange}
-            margin="normal"
-            variant="outlined"
-          /> */}
 
           <TextField
             id="outlined-name"
+            type="text"
             label="Length"
-            //className={classes.textField}
-            //value={this.state.length}
+            value={this.state.length}
             onChange={this.handleChange}
+            inputProps={{
+              name: "boxLength"
+            }}
             margin="normal"
             variant="outlined"
           />
@@ -141,8 +134,6 @@ class BoxDimension extends React.Component {
           <TextField
             id="outlined-name"
             label="Width"
-            //className={classes.textField}
-            // value={this.state.width}
             onChange={this.handleChange}
             margin="normal"
             variant="outlined"
@@ -151,8 +142,6 @@ class BoxDimension extends React.Component {
           <TextField
             id="outlined-name"
             label="Height"
-            //className={classes.textField}
-            //value={this.state.height}
             onChange={this.handleChange}
             margin="normal"
             variant="outlined"
@@ -161,8 +150,6 @@ class BoxDimension extends React.Component {
           <TextField
             id="outlined-name"
             label="Weight"
-            //className={classes.textField}
-            //value={this.state.weight}
             onChange={this.handleChange}
             margin="normal"
             variant="outlined"

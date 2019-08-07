@@ -80,6 +80,7 @@ class SignIn extends React.Component {
       console.log("Log in status:", this.state.isLoggedIn);
       if (data["Token"]) {
         this.setState({ token: data["Token"] });
+        //passing in token to other components
         this.props.onTokenChange(this.state.token);
         this.addProject();
         this.getAllBoxes();
@@ -139,22 +140,22 @@ class SignIn extends React.Component {
     }&token=${this.state.token}`;
     axios.post(url).then(res => {
       console.log(res.data);
-      this.getBoxes();
+      this.getAllBoxes();
     });
   }
 
-  //get todos
-  getBoxes() {
-    let url = `https://api.wynum.com/getStage/7b30f33b37b5c437ddc447a60a83b0bc?token=${
-      this.state.token
-    }`;
+  // //get todos
+  // getBoxes() {
+  //   let url = `https://api.wynum.com/getStage/7b30f33b37b5c437ddc447a60a83b0bc?token=${
+  //     this.state.token
+  //   }`;
 
-    axios.get(url).then(res => {
-      console.log(res.data);
-      // this.state.todos = res.data;
-      this.setState({ todos: res.data });
-    });
-  }
+  //   axios.get(url).then(res => {
+  //     console.log(res.data);
+  //     // this.state.todos = res.data;
+  //     this.setState({ todos: res.data });
+  //   });
+  // }
 
   //get all boxes
   getAllBoxes() {
