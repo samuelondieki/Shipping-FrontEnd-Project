@@ -52,7 +52,7 @@ class SignIn extends React.Component {
     this.state = {
       action: "login",
       email: "samuel.b@evermethod.com",
-      password: "samuel56",
+      password: "",
       token: "",
       apiToken: 9640783,
       isLoggedIn: false,
@@ -68,7 +68,6 @@ class SignIn extends React.Component {
     this.setState({ [event.target.name]: event.target.value });
   };
 
-  
   login = () => {
     let url = `https://api.wynum.com/loginapi?username=${
       this.state.email
@@ -81,7 +80,7 @@ class SignIn extends React.Component {
       console.log("Log in status:", this.state.isLoggedIn);
       if (data["Token"]) {
         this.setState({ token: data["Token"] });
-        this.props.onTokenChange(this.state.token)
+        this.props.onTokenChange(this.state.token);
         this.addProject();
         this.getAllBoxes();
         this.setState({ isLoggedIn: true });
