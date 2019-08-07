@@ -58,15 +58,19 @@ class BoxDimension extends React.Component {
       width: "",
       height: "",
       weight: "",
-      token: this.props.token,
+      token: props.userToken,
       apiToken: 9640783
     };
     this.handleChange = this.handleChange.bind(this);
-    console.log(this.state.token)
+    console.log(this.state.token);
   }
 
   handleChange = event => {
     this.setState({ [event.target.name]: event.target.value });
+  };
+  //testing how to pass stuff from one component to another
+  testFunction = () => {
+    console.log("Box:", this.state.token);
   };
 
   //handle random process ID generation
@@ -80,24 +84,23 @@ class BoxDimension extends React.Component {
     }
     return result;
   };
-  
 
   //post request to add box
   addBox = () => {
     var boxContext = this;
 
     var box = {
-      id: this.makeid(4),
+      process_ID: this.makeid(4),
       Length: boxContext.state.length,
       Width: boxContext.state.width,
       Height: boxContext.state.height,
       Weight: boxContext.state.weight
     };
-    console.log("token:", this.props.token)
+    console.log("token:", this.state.token);
     const url = `https://api.wynum.com/postStage/c02a19c943023456484c903018ee9708?token=${
-      this.props.token
+      this.state.token
     }`;
-    var config = { headers: {" Content-Type": "application/json" } };
+    var config = { headers: { "Content-Type": "application/json" } };
     axios.post(url, JSON.stringify(box), config).then(res => {
       console.log(res.data);
     });
@@ -169,7 +172,7 @@ class BoxDimension extends React.Component {
             variant="extended"
             aria-label="delete"
             color="primary"
-            onClick={this.addBox()}
+            onClick={this.addBox}
             className={classes.submit}
           >
             ADD BOX

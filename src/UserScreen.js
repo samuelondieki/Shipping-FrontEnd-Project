@@ -8,7 +8,9 @@ class UserScreen extends React.Component {
     super(props);
 
     this.state = {
-      screen: "sign"
+      screen: "sign",
+      boxes: {},
+      userToken:""
     };
   }
 
@@ -16,14 +18,25 @@ class UserScreen extends React.Component {
     if (newScreen !== "") this.setState({ screen: newScreen });
   };
 
+  onTokenChange = token => {
+    this.setState({ userToken: token });
+  };
+
   render() {
     return (
       <div>
         {this.state.screen === "sign" && (
-          <SignIn changeScreen={this.changeScreen} />
+          <SignIn
+            changeScreen={this.changeScreen}
+            box={this.state.token}
+            onTokenChange={this.onTokenChange}
+          />
         )}
         {this.state.screen === "box" && (
-          <BoxDimension changeScreen={this.changeScreen} />
+          <BoxDimension
+            changeScreen={this.changeScreen}
+            userToken={this.state.userToken}
+          />
         )}
         {this.state.screen === "confirm" && (
           <ConfirmCode changeScreen={this.changeScreen} />

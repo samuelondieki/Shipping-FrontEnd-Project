@@ -10,6 +10,7 @@ import axios from "axios";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
+import AccountCircle from "@material-ui/icons/AccountCircle";
 
 const styles = theme => ({
   "@global": {
@@ -51,7 +52,7 @@ class SignIn extends React.Component {
     this.state = {
       action: "login",
       email: "samuel.b@evermethod.com",
-      password: "",
+      password: "samuel56",
       token: "",
       apiToken: 9640783,
       isLoggedIn: false,
@@ -67,20 +68,7 @@ class SignIn extends React.Component {
     this.setState({ [event.target.name]: event.target.value });
   };
 
-  //change page to confirm code
-  changeToConfirm = () => {
-    this.login();
-    // if (!this.state.isLoggedIn && !this.state.showCodeCard) {
-    //   this.props.changeScreen("sign");
-    //   console.log(this.state.isLoggedIn);
-    // } else if (!this.state.isLoggedIn && this.state.showCodeCard) {
-    // this.props.changeScreen("confirm");
-    // } else if (this.state.isLoggedIn) {
-    //   this.props.changeScreen("box");
-    // }
-  };
-
-  //login a user
+  
   login = () => {
     let url = `https://api.wynum.com/loginapi?username=${
       this.state.email
@@ -93,8 +81,9 @@ class SignIn extends React.Component {
       console.log("Log in status:", this.state.isLoggedIn);
       if (data["Token"]) {
         this.setState({ token: data["Token"] });
+        this.props.onTokenChange(this.state.token)
         this.addProject();
-        this.getTodos();
+        this.getAllBoxes();
         this.setState({ isLoggedIn: true });
       }
 
@@ -151,15 +140,15 @@ class SignIn extends React.Component {
     }&token=${this.state.token}`;
     axios.post(url).then(res => {
       console.log(res.data);
-      this.getTodos();
+      this.getBoxes();
     });
   }
 
   //get todos
-  getTodos() {
-    let url = `https://api.wynum.com/getallStage/63ab151382791f6eeffc70ae383daf71?user_email=${
-      this.state.email
-    }&token=${this.state.token}`;
+  getBoxes() {
+    let url = `https://api.wynum.com/getStage/7b30f33b37b5c437ddc447a60a83b0bc?token=${
+      this.state.token
+    }`;
 
     axios.get(url).then(res => {
       console.log(res.data);
@@ -168,6 +157,23 @@ class SignIn extends React.Component {
     });
   }
 
+  //get all boxes
+  getAllBoxes() {
+    let url = `https://api.wynum.com/getallStage/63ab151382791f6eeffc70ae383daf71?token=${
+      this.state.token
+    }`;
+
+    axios.get(url).then(res => {
+      console.log(res.data);
+      // this.state.todos = res.data;
+      this.setState({ todos: res.data });
+    });
+  }
+
+  // componentDidMount() {
+  //   this.login();
+  // }
+
   render() {
     const { classes } = this.props;
     return (
@@ -175,7 +181,7 @@ class SignIn extends React.Component {
         <CssBaseline />
         <div className={classes.paper}>
           <Avatar className={classes.avatar}>
-            <LockOutlinedIcon />
+            <AccountCircle variant="secondary" />
           </Avatar>
           <Typography component="h1" variant="h5">
             Sign in
@@ -213,7 +219,9 @@ class SignIn extends React.Component {
                 variant="contained"
                 color="primary"
                 // type="submit"
-                onClick={this.changeToConfirm}
+                onClick={() => {
+                  this.login();
+                }}
                 className={classes.submit}
               >
                 Sign In / Sign Up
