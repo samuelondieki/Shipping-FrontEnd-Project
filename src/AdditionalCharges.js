@@ -55,6 +55,8 @@ class AdditionalCharges extends React.Component {
     super(props);
     this.state = {
       charge: "",
+      process_ID:props.ProcessID,
+      new_process_ID:"",
       orderNumber: "",
       token: "",
       apiToken: "9640783"
@@ -68,25 +70,21 @@ class AdditionalCharges extends React.Component {
 
   //post request to add box
   addCharges = () => {
-    var boxContext = this;
+    var chargeContext = this;
 
-    var box = {
-      process_ID: boxContext.state.process_ID,
-      Length: boxContext.state.length,
-      Width: boxContext.state.width,
-      Height: boxContext.state.height,
-      Weight: boxContext.state.weight
+    var charge = {
+      process_ID: chargeContext.state.new_process_ID,
+      Order_Number: chargeContext.state.process_ID,
+      Charge: chargeContext.state.charge,
     };
     const url = `https://api.wynum.com/postStage/c02a19c943023456484c903018ee9708?process_IDtoken=${
       this.token
     }`;
     var config = { headers: { "Content-Type": "application/json" } };
-    axios.post(url, JSON.stringify(box), config).then(res => {
+    axios.post(url, JSON.stringify(charge), config).then(res => {
      // console.log(res.data);
     });
     console.log(boxContext.state.process_ID);
-    this.props.onProcessIdChange(boxContext.state.process_ID);
-    this.props.changeScreen("Display")
   };
 
   render() {
@@ -96,20 +94,9 @@ class AdditionalCharges extends React.Component {
         <CssBaseline />
         <div className={classes.paper}>
           <Typography component="h1" variant="h5">
-            Add Boxes
+            Add any additional charges
           </Typography>
-          <TextField
-            id="outlined-name"
-            type="text"
-            label="Order Number"
-            value={this.state.orderNumber}
-            onChange={this.handleChange}
-            inputProps={{
-              name: "Order Number"
-            }}
-            margin="normal"
-            variant="outlined"
-          />
+
           <TextField
             id="outlined-name"
             type="text"
