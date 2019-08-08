@@ -172,7 +172,7 @@ class BoxDimension extends React.Component {
               color="primary"
               className={classes.button}
               onClick={() => {
-                this.props.changeScreen("display");
+                this.props.changeScreen("location");
               }}
             >
               Cancel
