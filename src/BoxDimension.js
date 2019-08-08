@@ -80,90 +80,104 @@ class BoxDimension extends React.Component {
       Height: boxContext.state.height,
       Weight: boxContext.state.weight
     };
-    const url = `https://api.wynum.com/postStage/c02a19c943023456484c903018ee9708?token=${
+    const url = `https://api.wynum.com/postStage/c02a19c943023456484c903018ee9708?process_IDtoken=${
       this.token
     }`;
     var config = { headers: { "Content-Type": "application/json" } };
     axios.post(url, JSON.stringify(box), config).then(res => {
      // console.log(res.data);
     });
+    console.log(boxContext.state.process_ID);
+    this.props.onProcessIdChange(boxContext.state.process_ID);
+    this.props.changeScreen("Display")
   };
 
   render() {
     const { classes } = this.props;
     return (
-      <Container component="main" maxWidth="xs">
+      <Container component="main" maxWidth="xs" xs={24}>
         <CssBaseline />
         <div className={classes.paper}>
-          <Avatar className={classes.avatar}>
-            <LockOutlinedIcon />
-          </Avatar>
           <Typography component="h1" variant="h5">
-            Box Dimension
+            Add Boxes
           </Typography>
           <TextField
             id="outlined-name"
+            type="text"
             label="Process ID"
-            //className={classes.textField}
-            // value={this.state.process_ID}
+            value={this.state.process_ID}
             onChange={this.handleChange}
+            inputProps={{
+              name: "process_ID"
+            }}
             margin="normal"
             variant="outlined"
           />
-
           <TextField
             id="outlined-name"
+            type="text"
             label="Length"
-            //className={classes.textField}
-            //value={this.state.length}
+            value={this.state.length}
             onChange={this.handleChange}
+            inputProps={{
+              name: "length"
+            }}
             margin="normal"
             variant="outlined"
           />
-
           <TextField
             id="outlined-name"
             label="Width"
-            //className={classes.textField}
-            // value={this.state.width}
+            value={this.state.width}
             onChange={this.handleChange}
+            inputProps={{
+              name: "width"
+            }}
             margin="normal"
             variant="outlined"
           />
-
           <TextField
             id="outlined-name"
             label="Height"
-            //className={classes.textField}
-            //value={this.state.height}
+            value={this.state.height}
             onChange={this.handleChange}
+            inputProps={{
+              name: "height"
+            }}
             margin="normal"
             variant="outlined"
           />
-
           <TextField
             id="outlined-name"
             label="Weight"
-            //className={classes.textField}
-            //value={this.state.weight}
+            value={this.state.weight}
             onChange={this.handleChange}
+            inputProps={{
+              name: "weight"
+            }}
             margin="normal"
             variant="outlined"
           />
-
-          <Fab
-            variant="extended"
-            aria-label="delete"
-            color="primary"
-            onClick={this.addBox()}
-            className={classes.submit}
-          >
-            Submit
-          </Fab>
-          <Button onClick ={(() =>
-                this.props.changeScreen("Display"))} >
-                Click me Click me
-              </Button>
+          <Grid item xs={12}>
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              onClick={this.addBox}
+            >
+              ADD
+            </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              onClick={() => {
+                this.props.changeScreen("display");
+              }}
+            >
+              Cancel
+            </Button>
+          </Grid>
         </div>
       </Container>
     );
