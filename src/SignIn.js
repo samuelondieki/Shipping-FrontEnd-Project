@@ -14,6 +14,7 @@ import Container from "@material-ui/core/Container";
 import BoxDimension from "./BoxDimension";
 import ConfirmCode from "./ConfirmCode";
 import { SwipeableDrawer } from "@material-ui/core";
+import Display from "./Display";
 
 const styles = theme => ({
   "@global": {
@@ -54,7 +55,7 @@ class SignIn extends React.Component {
     super(props);
     this.state = {
       action: "login",
-      email: "samuel.b@evermethod.com",
+      email: "patrick.m@evermethod.com",
       password: "",
       token: "",
       apiToken: 8846051,
@@ -62,7 +63,8 @@ class SignIn extends React.Component {
       showCodeCard: false,
       todos: [],
       description: "",
-      code: ""
+      code: "",
+      boxes: []
     };
   }
 
@@ -71,10 +73,7 @@ class SignIn extends React.Component {
     this.setState({ [event.target.name]: event.target.value });
   };
 
-  //change page to confirm code
-  changeToConfirm = () => {
-    this.login();
-  };
+ 
   //login a user
   login = () => {
     let url = `https://api.wynum.com/loginapi?username=${
@@ -88,8 +87,9 @@ class SignIn extends React.Component {
       console.log("Log in status:", this.state.isLoggedIn);
       if (data["Token"]) {
         this.setState({ token: data["Token"] });
+        //passing in token to other components
+        this.props.onTokenChange(this.state.token);
         this.addProject();
-        this.getTodos();
         this.setState({ isLoggedIn: true });
         this.props.changeScreen("box");
       }
@@ -116,7 +116,6 @@ class SignIn extends React.Component {
       console.log(data["Token"]);
       if (data["Token"]) {
         this.setState({ token: data["Token"] });
-
         this.addProject();
         this.setState({ isLoggedIn: true });
       }
@@ -130,23 +129,13 @@ class SignIn extends React.Component {
     }&token=${this.state.token}`;
     axios.post(url).then(res => {
       console.log(res.data);
-      this.getTodos();
-    });
-  }
-
-  //get todos
-  getTodos() {
-    let url = `https://api.wynum.com/getallStage/71f71ac6b3200cdd83ef34725b9aa501?user_email=${
-      this.state.email
-    }&token=${this.state.token}`;
-    axios.get(url).then(res => {
-      console.log(res.data);
-      this.state.todos = res.data;
+      // this.getBoxes();
     });
   }
 
   render() {
     const { classes } = this.props;
+
     return (
       <Container component="main" maxWidth="xs">
         <CssBaseline />
@@ -157,6 +146,7 @@ class SignIn extends React.Component {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
+
           <form className={classes.form} noValidate>
             <TextField
               variant="outlined"
@@ -190,7 +180,7 @@ class SignIn extends React.Component {
                 variant="contained"
                 color="primary"
                 // type="submit"
-                onClick={this.changeToConfirm}
+                onClick={this.login}
                 className={classes.submit}
               >
                 Sign In / Sign Up
