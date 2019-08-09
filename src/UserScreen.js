@@ -2,12 +2,13 @@ import React from "react";
 import BoxDimension from "./BoxDimension";
 import ConfirmCode from "./ConfirmCode";
 import SignIn from "./SignIn";
-
+import Display from "./Display";
+import Location from "./Location";
+import AdditionalCharges from "./AdditionalCharges";
 import Report from "./Report";
 import Styling from "./Styling";
 import BoxReport from "./BoxReport";
 import UpdateBox from "./UpdateBox";
-
 
 class UserScreen extends React.Component {
   constructor(props) {
@@ -19,14 +20,12 @@ class UserScreen extends React.Component {
       userToken: "",
       boxEditing: {},
       ProcessID: ""
-
     };
   }
   //function to change page on app
   changeScreen = (newScreen = "") => {
     if (newScreen !== "") this.setState({ screen: newScreen });
   };
-
 
   onTokenChange = token => {
     this.setState({ userToken: token });
@@ -41,19 +40,17 @@ class UserScreen extends React.Component {
     this.setState({ screen: "box_update" });
   };
 
-
   render() {
     return (
       <div>
         {this.state.screen === "sign" && (
-
           <SignIn
             changeScreen={this.changeScreen}
             box={this.state.token}
             onTokenChange={this.onTokenChange}
             userToken={this.state.userToken}
           />
-        )}
+        )} 
         {this.state.screen === "dashboard" && (
           <Styling
             changeScreen={this.changeScreen}
@@ -94,28 +91,32 @@ class UserScreen extends React.Component {
             box={this.state.boxEditing}
           />
         )}
-       
         {this.state.screen === "Display" && (
-          <Display changeScreen={this.changeScreen}  
-          userToken={this.state.userToken}
-          onTokenChange={this.onTokenChange}
-          onProcessIdChange={this.onProcessIdChange}
-          ProcessID={this.state.ProcessID}/>
+          <Display
+            changeScreen={this.changeScreen}
+            userToken={this.state.userToken}
+            onTokenChange={this.onTokenChange}
+            onProcessIdChange={this.onProcessIdChange}
+            ProcessID={this.state.ProcessID}
+          />
         )}
         {this.state.screen === "addcharge" && (
-          <AdditionalCharges changeScreen={this.changeScreen}  
-          userToken={this.state.userToken}
-          onTokenChange={this.onTokenChange}
-          onProcessIdChange={this.onProcessIdChange}
-          ProcessID={this.state.ProcessID}/>
+          <AdditionalCharges
+            changeScreen={this.changeScreen}
+            userToken={this.state.userToken}
+            onTokenChange={this.onTokenChange}
+            onProcessIdChange={this.onProcessIdChange}
+            ProcessID={this.state.ProcessID}
+          />
         )}
         {this.state.screen === "location" && (
-          <Location changeScreen={this.changeScreen}  
-          userToken={this.state.userToken}
-          onTokenChange={this.onTokenChange}
-          onProcessIdChange={this.onProcessIdChange}
-          ProcessID={this.state.ProcessID}/>
-
+          <Location
+            changeScreen={this.changeScreen}
+            userToken={this.state.userToken}
+            onTokenChange={this.onTokenChange}
+            onProcessIdChange={this.onProcessIdChange}
+            ProcessID={this.state.ProcessID}
+          />
         )}
         )
       </div>
