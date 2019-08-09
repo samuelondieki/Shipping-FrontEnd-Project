@@ -6,15 +6,11 @@ import TextField from "@material-ui/core/TextField";
 import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import PropTypes from "prop-types";
-import swal from "sweetalert";
 import axios from "axios";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
-import BoxDimension from "./BoxDimension";
-import ConfirmCode from "./ConfirmCode";
-import { SwipeableDrawer } from "@material-ui/core";
-import Display from "./Display";
+import AccountCircle from "@material-ui/icons/AccountCircle";
+
 
 const styles = theme => ({
   "@global": {
@@ -58,7 +54,7 @@ class SignIn extends React.Component {
       email: "patrick.m@evermethod.com",
       password: "",
       token: "",
-      apiToken: 8846051,
+      apiToken: 9640783,
       isLoggedIn: false,
       showCodeCard: false,
       todos: [],
@@ -72,6 +68,7 @@ class SignIn extends React.Component {
   handleChange = event => {
     this.setState({ [event.target.name]: event.target.value });
   };
+
 
  
   //login a user
@@ -90,19 +87,36 @@ class SignIn extends React.Component {
         //passing in token to other components
         this.props.onTokenChange(this.state.token);
         this.addProject();
+        this.getAllBoxes();
         this.setState({ isLoggedIn: true });
-        this.props.changeScreen("box");
       }
 
       console.log("Log in status:", this.state.isLoggedIn);
-      if (data["value"] === 0) {
-        this.state.showCodeCard = true;
+      if (this.state.isLoggedIn === true) {
+        this.props.changeScreen("dashboard");
+        console.log(this.state.isLoggedIn);
+      } else if (
+        this.state.isLoggedIn === false &&
+        this.state.showCodeCard === false
+      ) {
+        this.props.changeScreen("sign");
+      } else if (
+        this.state.isLoggedIn === false &&
+        this.state.showCodeCard === false
+      ) {
+      } else if (
+        this.state.isLoggedIn === false &&
+        this.state.showCodeCard === true
+      ) {
         this.props.changeScreen("confirm");
       }
 
+      if (data["value"] === 0) {
+        this.setState({ showCodeCard: true });
+      }
+
       if (data["error"] === "Email not confirmed") {
-        this.state.showCodeCard = true;
-        this.props.changeScreen("confirm");
+        this.setState({ showCodeCard: true });
       }
     });
   };
@@ -129,9 +143,27 @@ class SignIn extends React.Component {
     }&token=${this.state.token}`;
     axios.post(url).then(res => {
       console.log(res.data);
-      // this.getBoxes();
+
+      this.getAllBoxes();
     });
   }
+
+  //get all boxes
+  getAllBoxes() {
+    let url = `https://api.wynum.com/getallStage/63ab151382791f6eeffc70ae383daf71?token=${
+      this.state.token
+    }`;
+
+    axios.get(url).then(res => {
+      console.log(res.data);
+      // this.state.todos = res.data;
+      this.setState({ todos: res.data });
+    });
+  }
+
+  // componentDidMount() {
+  //   this.login();
+  // }
 
   render() {
     const { classes } = this.props;
@@ -141,7 +173,7 @@ class SignIn extends React.Component {
         <CssBaseline />
         <div className={classes.paper}>
           <Avatar className={classes.avatar}>
-            <LockOutlinedIcon />
+            <AccountCircle variant="secondary" />
           </Avatar>
           <Typography component="h1" variant="h5">
             Sign in
@@ -180,8 +212,12 @@ class SignIn extends React.Component {
                 variant="contained"
                 color="primary"
                 // type="submit"
-                onClick={this.login}
-                className={classes.submit}
+
+                onClick={() => {
+                  this.login();
+                }}
+                // className={classes.submit}
+
               >
                 Sign In / Sign Up
               </Button>

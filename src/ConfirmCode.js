@@ -56,7 +56,6 @@ class confirmationPage extends React.Component {
     this.state = {
       isLoggedIn: false,
       showCodeCard: false,
-
       code: ""
     };
   }
@@ -68,7 +67,8 @@ class confirmationPage extends React.Component {
     }&token=${this.state.token}`;
     axios.get(url).then(res => {
       console.log(res.data);
-      this.state.todos = res.data;
+      // this.state.todos = res.data;
+      this.setState({ todos: res.data });
     });
   }
   //adding project
@@ -89,15 +89,11 @@ class confirmationPage extends React.Component {
       let data = res.data;
       console.log(data["Token"]);
       if (data["Token"]) {
-        this.token = data["Token"];
+        this.setState({ token: data["Token"] });
+        //passing in token to other components
+        this.props.onTokenChange(this.state.token);
         this.addProject();
-        this.isLoggedIn = true;
-
-        // if ((this.state.isLoggedIn = true)) {
-        //   this.props.changeScreen("box");
-        // } else {
-        //   this.props.changeScreen("confirm");
-        // }
+        this.setState({ isLoggedIn: true });
       }
     });
   }

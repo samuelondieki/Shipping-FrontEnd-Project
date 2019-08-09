@@ -58,7 +58,7 @@ const styles = theme => ({
   }
 });
 
-class BoxDimension extends React.Component {
+class UpdateBox extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -67,9 +67,12 @@ class BoxDimension extends React.Component {
       height: "",
       weight: "",
       boxes: [],
+      process_id: props.ProcessID,
       token: props.userToken,
+      box: props.box,
       apiToken: 9640783
     };
+    console.log("Box:", this.state.box);
   }
 
   handleChange = event => {
@@ -89,22 +92,20 @@ class BoxDimension extends React.Component {
   };
 
   //post request to add box
-  addBox = () => {
-    var boxContext = this;
+  updateBox = () => {
     let box = {
       Length: parseInt(this.state.length),
       Width: parseInt(this.state.width),
       Height: parseInt(this.state.height),
       Weight: parseInt(this.state.weight),
-      process_ID: this.makeid(6)
+      process_ID: this.state.process_id
     };
 
     this.state.boxes.splice(0, 0, box);
     console.log("token:", this.state.token);
-    this.props.onProcessIdChange(this.state.process_ID);
-    const url = `https://api.wynum.com/postStage/c02a19c943023456484c903018ee9708?token=${
+    console.log("ID being passed in:", this.state.ID);
+    const url = `https://api.wynum.com/updateStage/3ce5f50313f5818e1e02ff304c1f2b37?token=${
       this.state.token
-
     }`;
     console.log("box", box);
     var config = { headers: { "Content-Type": "application/json" } };
@@ -112,9 +113,6 @@ class BoxDimension extends React.Component {
       console.log("box after ", box);
       console.log(res.data);
     });
-    console.log(boxContext.state.process_ID);
-    this.props.onProcessIdChange(boxContext.state.process_ID);
-    this.props.changeScreen("location")
   };
 
   render() {
@@ -125,7 +123,7 @@ class BoxDimension extends React.Component {
           <CssBaseline />
           <div className={classes.paper}>
             <Typography component="h1" variant="h5">
-              Add Box
+              Update Box
             </Typography>
 
             <TextField
@@ -184,7 +182,7 @@ class BoxDimension extends React.Component {
                 variant="contained"
                 color="primary"
                 className={classes.button}
-                onClick={this.addBox}
+                onClick={this.updateBox}
               >
                 ADD
               </Button>
@@ -199,13 +197,13 @@ class BoxDimension extends React.Component {
               >
                 Cancel
               </Button>
-
-              {/* Direct the user to location or next process  */}
               <Button
                 variant="contained"
                 color="primary"
                 className={classes.button}
-                
+                onClick={() => {
+                  this.props.changeScreen("location");
+                }}
               >
                 Next
               </Button>
@@ -213,12 +211,11 @@ class BoxDimension extends React.Component {
           </div>
         </Container>
       </Grid>
-
     );
   }
 }
-BoxDimension.propTypes = {
+UpdateBox.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(BoxDimension);
+export default withStyles(styles)(UpdateBox);

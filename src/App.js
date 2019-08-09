@@ -1,17 +1,26 @@
 import React from "react";
-import BoxDimension from "./BoxDimension";
-import SignIn from "./SignIn";
-import ConfirmCode from "./ConfirmCode";
 import UserScreen from "./UserScreen";
+import Styling from "./Styling";
+import SignIn from "./SignIn";
+
 class App extends React.Component {
   render() {
+    const isLoggedIn = this.props.isLoggedIn;
+    console.log(isLoggedIn);
     return (
-      <div className="App">
-        
-<UserScreen/>
-        {/* <SignIn /> */}
-        {/* <ConfirmCode/> */}
-        {/* <BoxDimension/> */}
+      <div>
+        {/* {isLoggedIn ? (
+          <Styling
+            onTokenChange={this.props.onTokenChange}
+            user={this.props.isLoggedIn}
+          />
+        ) : (
+          <SignIn
+            onTokenChange={this.props.onTokenChange}
+            
+          />
+        )} */}
+        <UserScreen />
       </div>
     );
   }
