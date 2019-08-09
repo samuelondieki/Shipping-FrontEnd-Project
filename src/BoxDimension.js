@@ -89,7 +89,7 @@ class BoxDimension extends React.Component {
     });
     console.log(boxContext.state.process_ID);
     this.props.onProcessIdChange(boxContext.state.process_ID);
-    this.props.changeScreen("Display")
+    this.props.changeScreen("location")
   };
 
   render() {
@@ -101,7 +101,7 @@ class BoxDimension extends React.Component {
           <Typography component="h1" variant="h5">
             Add Boxes
           </Typography>
-          <TextField
+          {/* <TextField
             id="outlined-name"
             type="text"
             label="Process ID"
@@ -112,7 +112,7 @@ class BoxDimension extends React.Component {
             }}
             margin="normal"
             variant="outlined"
-          />
+          /> */}
           <TextField
             id="outlined-name"
             type="text"
@@ -167,16 +167,16 @@ class BoxDimension extends React.Component {
             >
               ADD
             </Button>
-            <Button
+            {/* <Button
               variant="contained"
               color="primary"
               className={classes.button}
               onClick={() => {
-                this.props.changeScreen("display");
+                this.props.changeScreen("location");
               }}
             >
               Cancel
-            </Button>
+            </Button> */}
           </Grid>
         </div>
       </Container>
