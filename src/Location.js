@@ -60,44 +60,72 @@ class Location extends React.Component {
       departure: "",
       boxes:[],
       token: props.userToken,
-      apiToken: 9640783
+      apiToken: 9640783,
+      process_ID: "565",
+      charge: "0",
     };
   }
   handleChange = event => {
     this.setState({ [event.target.name]: event.target.value });
   };
   //handle random process ID generation
-  makeid = length => {
-    var result = "";
-    var characters =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    var charactersLength = characters.length;
-    for (var i = 0; i < length; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
+//   makeid = length => {
+//     var result = "";
+//     var characters =
+//       "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+//     var charactersLength = characters.length;
+//     for (var i = 0; i < length; i++) {
+//       result += characters.charAt(Math.floor(Math.random() * charactersLength));
+//     }
+//     return result;
+//   };
+
+  //post request to additional charges with 0 default value
+
+  adddefaultCharge = () => {
+    var chargeContext = this;
+
+    var charge = {
+      process_ID: chargeContext.state.process_ID,
+      Charge: parseInt(chargeContext.state.charge),
+      Charge2: parseInt(chargeContext.state.charge),
+      Charge3: parseInt(chargeContext.state.charge),
+      Charge4: parseInt(chargeContext.state.charge),
+      Charge5: parseInt(chargeContext.state.charge),
+      Charge6: parseInt(chargeContext.state.charge),
+      Charge7: parseInt(chargeContext.state.charge),
+      Charge8: parseInt(chargeContext.state.charge),
+      Charge9: parseInt(chargeContext.state.charge),
+      Charge10: parseInt(chargeContext.state.charge),
+
+    };
+    const url = `https://api.wynum.com/postStage/2fb39ddfdd4b3206cb3e1b387cf8c3bc?token=${this.state.token}`;
+    var config = { headers: { "Content-Type": "application/json" } };
+    axios.post(url, JSON.stringify(charge), config).then(res => {
+     // console.log(res.data);
+    });
+    //console.log(boxContext.state.process_ID);
+    this.props.changeScreen("Display");
   };
-  //post request to add box
-  //will need to add post request for additional charges set to 0
+  
+  //post request to location
+  //addcharges call()
   addnocharge = () => {
     var locationcontext = this;
     let location = {
-      Length: locationcontext.state.length,
-      Width: locationcontext.state.width,
-      Height: locationcontext.state.height,
-      Weight: locationcontext.state.weight,
-      process_ID: locationcontext.makeid(6)
+      shipment_Location_Departing: locationcontext.state.departure,
+      shipment_Location_Destination: locationcontext.state.arrival,
+      process_ID: locationcontext.state.process_ID
     };
     this.state.boxes.splice(0, 0, location);
     console.log("token:", this.state.token);
-    const url = `https://api.wynum.com/postStage/c02a19c943023456484c903018ee9708?token=${
-      this.state.token
-    }`;
+    const url = `https://api.wynum.com/postStage/0762ddf88093e93d1d9b06f48997a02e?token=${this.state.token}`;
     console.log("box", location);
     var config = { headers: { "Content-Type": "application/json" } };
     axios.post(url, JSON.stringify(location), config).then(res => {
       console.log("box after ", location);
       console.log(res.data);
+      this.adddefaultCharge();
       this.props.changeScreen("Display");
     });
   };
@@ -105,23 +133,19 @@ class Location extends React.Component {
   addcharge = () => {
     var locationcontext2 = this;
     let location2 = {
-      Length: locationcontext2.state.length,
-      Width: locationcontext2.state.width,
-      Height:locationcontext2.state.height,
-      Weight: locationcontext2.state.weight,
-      process_ID: locationcontext2.makeid(6)
+        shipment_Location_DepartingLength: locationcontext2.state.departure,
+        shipment_Location_Destination: locationcontext2.state.arrival,
+        process_ID: locationcontext2.state.process_ID
     };
     this.state.boxes.splice(0, 0, location2);
     console.log("token:", this.state.token);
-    const url = `https://api.wynum.com/postStage/c02a19c943023456484c903018ee9708?token=${
-      this.state.token
-    }`;
+    const url = `https://api.wynum.com/postStage/0762ddf88093e93d1d9b06f48997a02e?token=${this.state.token}`;
     console.log("box", location2);
     var config = { headers: { "Content-Type": "application/json" } };
     axios.post(url, JSON.stringify(location2), config).then(res => {
       console.log("box after ", location2);
       console.log(res.data);
-      this.props.changeScreen("AdditionalCharges");
+      this.props.changeScreen("addcharge");
     });
   };
   render() {
@@ -135,7 +159,7 @@ class Location extends React.Component {
           </Typography>
           <TextField
             id="outlined-name"
-            type="number"
+            type="text"
             label="Arrival"
             value={this.state.arrival}
             onChange={this.handleChange}
@@ -147,8 +171,8 @@ class Location extends React.Component {
           />
           <TextField
             id="outlined-name"
-            label="Width"
-            type="Departure"
+            label="Departure"
+            type="Text"
             value={this.state.departure}
             onChange={this.handleChange}
             inputProps={{
@@ -163,17 +187,17 @@ class Location extends React.Component {
               variant="contained"
               color="primary"
               className={classes.button}
-              onClick={this.addnocharge}
+              onClick={this.addcharge}
             >
-              Add Location With No Additional Charges
+              Add With Additional Charges
             </Button>
             <Button
               variant="contained"
               color="primary"
               className={classes.button}
-              onClick={this.addcharge}
+              onClick={this.addnocharge}
             >
-              Add Location With Additional Charges
+              Add Without Additional Charges
             </Button>
             {/* <Button
               variant="contained"
