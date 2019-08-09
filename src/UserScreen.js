@@ -93,6 +93,7 @@ class UserScreen extends React.Component {
             ProcessID={this.state.ProcessID}
             box={this.state.boxEditing}
           />
+        )}
        
         {this.state.screen === "Display" && (
           <Display changeScreen={this.changeScreen}  
