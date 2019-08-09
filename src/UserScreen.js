@@ -4,6 +4,7 @@ import ConfirmCode from "./ConfirmCode";
 import SignIn from "./SignIn";
 import Display from "./Display";
 import AdditionalCharges from "./AdditionalCharges";
+import Location from "./Location";
 
 class UserScreen extends React.Component {
   constructor(props) {
@@ -16,15 +17,15 @@ class UserScreen extends React.Component {
       processID:"",
     };
   }
-
+  //function to change page on app
   changeScreen = (newScreen = "") => {
     if (newScreen !== "") this.setState({ screen: newScreen });
   };
 
   //add function to export the token 
   onTokenChange = token => {
-    this.setState({userToken:token})
-  }
+    this.setState({userToken:token});
+  };
 
   //add function to export process ID
   onProcessIdChange = Process_ID => {
