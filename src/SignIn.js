@@ -11,6 +11,7 @@ import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 
+
 const styles = theme => ({
   "@global": {
     body: {
@@ -50,7 +51,7 @@ class SignIn extends React.Component {
     super(props);
     this.state = {
       action: "login",
-      email: "samuel.b@evermethod.com",
+      email: "patrick.m@evermethod.com",
       password: "",
       token: "",
       apiToken: 9640783,
@@ -58,7 +59,8 @@ class SignIn extends React.Component {
       showCodeCard: false,
       todos: [],
       description: "",
-      code: ""
+      code: "",
+      boxes: []
     };
   }
 
@@ -67,6 +69,9 @@ class SignIn extends React.Component {
     this.setState({ [event.target.name]: event.target.value });
   };
 
+
+ 
+  //login a user
   login = () => {
     let url = `https://api.wynum.com/loginapi?username=${
       this.state.email
@@ -125,7 +130,6 @@ class SignIn extends React.Component {
       console.log(data["Token"]);
       if (data["Token"]) {
         this.setState({ token: data["Token"] });
-
         this.addProject();
         this.setState({ isLoggedIn: true });
       }
@@ -139,6 +143,7 @@ class SignIn extends React.Component {
     }&token=${this.state.token}`;
     axios.post(url).then(res => {
       console.log(res.data);
+
       this.getAllBoxes();
     });
   }
@@ -162,6 +167,7 @@ class SignIn extends React.Component {
 
   render() {
     const { classes } = this.props;
+
     return (
       <Container component="main" maxWidth="xs">
         <CssBaseline />
@@ -172,6 +178,7 @@ class SignIn extends React.Component {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
+
           <form className={classes.form} noValidate>
             <TextField
               variant="outlined"
@@ -205,10 +212,12 @@ class SignIn extends React.Component {
                 variant="contained"
                 color="primary"
                 // type="submit"
+
                 onClick={() => {
                   this.login();
                 }}
                 // className={classes.submit}
+
               >
                 Sign In / Sign Up
               </Button>

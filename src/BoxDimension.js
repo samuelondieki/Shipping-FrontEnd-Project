@@ -104,6 +104,7 @@ class BoxDimension extends React.Component {
     this.props.onProcessIdChange(this.state.process_ID);
     const url = `https://api.wynum.com/postStage/c02a19c943023456484c903018ee9708?token=${
       this.state.token
+
     }`;
     console.log("box", box);
     var config = { headers: { "Content-Type": "application/json" } };
@@ -111,6 +112,9 @@ class BoxDimension extends React.Component {
       console.log("box after ", box);
       console.log(res.data);
     });
+    console.log(boxContext.state.process_ID);
+    this.props.onProcessIdChange(boxContext.state.process_ID);
+    this.props.changeScreen("location")
   };
 
   render() {
@@ -209,6 +213,7 @@ class BoxDimension extends React.Component {
           </div>
         </Container>
       </Grid>
+
     );
   }
 }
