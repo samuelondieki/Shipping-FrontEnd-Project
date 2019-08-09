@@ -7,7 +7,6 @@ import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import PropTypes from "prop-types";
 import axios from "axios";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import AccountCircle from "@material-ui/icons/AccountCircle";
@@ -89,7 +88,7 @@ class SignIn extends React.Component {
 
       console.log("Log in status:", this.state.isLoggedIn);
       if (this.state.isLoggedIn === true) {
-        this.props.changeScreen("box");
+        this.props.changeScreen("dashboard");
         console.log(this.state.isLoggedIn);
       } else if (
         this.state.isLoggedIn === false &&
@@ -143,19 +142,6 @@ class SignIn extends React.Component {
       this.getAllBoxes();
     });
   }
-
-  // //get todos
-  // getBoxes() {
-  //   let url = `https://api.wynum.com/getStage/7b30f33b37b5c437ddc447a60a83b0bc?token=${
-  //     this.state.token
-  //   }`;
-
-  //   axios.get(url).then(res => {
-  //     console.log(res.data);
-  //     // this.state.todos = res.data;
-  //     this.setState({ todos: res.data });
-  //   });
-  // }
 
   //get all boxes
   getAllBoxes() {
@@ -222,7 +208,7 @@ class SignIn extends React.Component {
                 onClick={() => {
                   this.login();
                 }}
-                className={classes.submit}
+                // className={classes.submit}
               >
                 Sign In / Sign Up
               </Button>

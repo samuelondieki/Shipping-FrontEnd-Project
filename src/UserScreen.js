@@ -2,6 +2,10 @@ import React from "react";
 import BoxDimension from "./BoxDimension";
 import ConfirmCode from "./ConfirmCode";
 import SignIn from "./SignIn";
+import Report from "./Report";
+import Styling from "./Styling";
+import BoxReport from "./BoxReport";
+import UpdateBox from "./UpdateBox";
 
 class UserScreen extends React.Component {
   constructor(props) {
@@ -10,7 +14,9 @@ class UserScreen extends React.Component {
     this.state = {
       screen: "sign",
       boxes: {},
-      userToken:""
+      userToken: "",
+      boxEditing: {},
+      ProcessID: ""
     };
   }
 
@@ -22,6 +28,15 @@ class UserScreen extends React.Component {
     this.setState({ userToken: token });
   };
 
+  onProcessIdChange = Process_ID => {
+    this.setState({ ProcessID: Process_ID });
+  };
+
+  changetoEdit = box => {
+    this.setState({ boxEditing: box });
+    this.setState({ screen: "box_update" });
+  };
+
   render() {
     return (
       <div>
@@ -30,6 +45,13 @@ class UserScreen extends React.Component {
             changeScreen={this.changeScreen}
             box={this.state.token}
             onTokenChange={this.onTokenChange}
+            userToken={this.state.userToken}
+          />
+        )}
+        {this.state.screen === "dashboard" && (
+          <Styling
+            changeScreen={this.changeScreen}
+            userToken={this.state.userToken}
           />
         )}
         {this.state.screen === "box" && (
@@ -39,7 +61,32 @@ class UserScreen extends React.Component {
           />
         )}
         {this.state.screen === "confirm" && (
-          <ConfirmCode changeScreen={this.changeScreen} />
+          <ConfirmCode
+            changeScreen={this.changeScreen}
+            onTokenChange={this.onTokenChange}
+          />
+        )}
+        {this.state.screen === "report" && (
+          <Report
+            changeScreen={this.changeScreen}
+            userToken={this.state.userToken}
+          />
+        )}
+        {this.state.screen === "box_report" && (
+          <BoxReport
+            changeScreen={this.changeScreen}
+            userToken={this.state.userToken}
+            changetoEdit={this.changetoEdit}
+          />
+        )}
+        {this.state.screen === "box_update" && (
+          <UpdateBox
+            changeScreen={this.changeScreen}
+            userToken={this.state.userToken}
+            onProcessIdChange={this.onProcessIdChange}
+            ProcessID={this.state.ProcessID}
+            box={this.state.boxEditing}
+          />
         )}
       </div>
     );

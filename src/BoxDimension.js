@@ -1,5 +1,5 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, recomposeColor } from "@material-ui/core/styles";
 import MenuItem from "@material-ui/core/MenuItem";
 import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
@@ -8,7 +8,7 @@ import { withStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Container from "@material-ui/core/Container";
 import Avatar from "@material-ui/core/Avatar";
-import PropTypes from "prop-types";
+import PropTypes, { number } from "prop-types";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -23,10 +23,13 @@ const styles = theme => ({
     }
   },
   paper: {
-    marginTop: theme.spacing(8),
+    marginTop: theme.spacing(1),
     display: "flex",
     flexDirection: "column",
     alignItems: "center"
+  },
+  root: {
+    width: "100%"
   },
   avatar: {
     margin: theme.spacing(1),
@@ -47,6 +50,11 @@ const styles = theme => ({
   formControl: {
     margin: theme.spacing.unit,
     minWidth: 120
+  },
+  button: {
+    display: "inline",
+    margin: theme.spacing.unit,
+    marginTop: theme.spacing.unit * 2
   }
 });
 
@@ -83,17 +91,17 @@ class BoxDimension extends React.Component {
   //post request to add box
   addBox = () => {
     var boxContext = this;
-
     let box = {
-      Length: this.state.length,
-      Width: this.state.width,
-      Height: this.state.height,
-      Weight: this.state.weight,
+      Length: parseInt(this.state.length),
+      Width: parseInt(this.state.width),
+      Height: parseInt(this.state.height),
+      Weight: parseInt(this.state.weight),
       process_ID: this.makeid(6)
     };
 
     this.state.boxes.splice(0, 0, box);
     console.log("token:", this.state.token);
+    this.props.onProcessIdChange(this.state.process_ID);
     const url = `https://api.wynum.com/postStage/c02a19c943023456484c903018ee9708?token=${
       this.state.token
     }`;
@@ -108,64 +116,99 @@ class BoxDimension extends React.Component {
   render() {
     const { classes } = this.props;
     return (
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <div className={classes.paper}>
-          <Avatar className={classes.avatar}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Box Dimension
-          </Typography>
+      <Grid container className={classes.root} spacing={24}>
+        <Container component="main" maxWidth="xs" xs={24}>
+          <CssBaseline />
+          <div className={classes.paper}>
+            <Typography component="h1" variant="h5">
+              Add Box
+            </Typography>
 
-          <TextField
-            id="outlined-name"
-            type="text"
-            label="Length"
-            value={this.state.length}
-            onChange={this.handleChange}
-            inputProps={{
-              name: "boxLength"
-            }}
-            margin="normal"
-            variant="outlined"
-          />
+            <TextField
+              id="outlined-name"
+              type="number"
+              label="Length"
+              value={this.state.length}
+              onChange={this.handleChange}
+              inputProps={{
+                name: "length"
+              }}
+              margin="normal"
+              variant="outlined"
+            />
 
-          <TextField
-            id="outlined-name"
-            label="Width"
-            onChange={this.handleChange}
-            margin="normal"
-            variant="outlined"
-          />
+            <TextField
+              id="outlined-name"
+              label="Width"
+              type="number"
+              value={this.state.width}
+              onChange={this.handleChange}
+              inputProps={{
+                name: "width"
+              }}
+              margin="normal"
+              variant="outlined"
+            />
 
-          <TextField
-            id="outlined-name"
-            label="Height"
-            onChange={this.handleChange}
-            margin="normal"
-            variant="outlined"
-          />
+            <TextField
+              id="outlined-name"
+              label="Height"
+              type="number"
+              value={this.state.height}
+              onChange={this.handleChange}
+              inputProps={{
+                name: "height"
+              }}
+              margin="normal"
+              variant="outlined"
+            />
 
-          <TextField
-            id="outlined-name"
-            label="Weight"
-            onChange={this.handleChange}
-            margin="normal"
-            variant="outlined"
-          />
+            <TextField
+              id="outlined-name"
+              label="Weight"
+              type="number"
+              value={this.state.weight}
+              onChange={this.handleChange}
+              inputProps={{
+                name: "weight"
+              }}
+              margin="normal"
+              variant="outlined"
+            />
+            <Grid item xs={12}>
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                onClick={this.addBox}
+              >
+                ADD
+              </Button>
 
-          <Fab
-            variant="extended"
-            aria-label="delete"
-            color="primary"
-            onClick={this.addBox}
-            className={classes.submit}
-          >
-            ADD BOX
-          </Fab>
-        </div>
-      </Container>
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                onClick={() => {
+                  this.props.changeScreen("report");
+                }}
+              >
+                Cancel
+              </Button>
+
+              {/* Direct the user to location or next process  */}
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                
+              >
+                Next
+              </Button>
+            </Grid>
+          </div>
+        </Container>
+      </Grid>
     );
   }
 }
