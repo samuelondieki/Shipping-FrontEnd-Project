@@ -107,7 +107,7 @@ class Report extends React.Component {
                       key={row.id}
                       align={row.numeric ? "right" : "left"}
                       padding={row.disablePadding ? "none" : "default"}
-                     // sortDirection={orderBy === row.id ? order : false}
+                      // sortDirection={orderBy === row.id ? order : false}
                     >
                       <TableSortLabel>{row.label}</TableSortLabel>
                     </TableCell>
@@ -133,7 +133,7 @@ class Report extends React.Component {
                       {boxes.From}
                     </TableCell>
                     <TableCell component="th" scope="row">
-                      {boxes.Final_price}
+                      {boxes.Final_Price}
                     </TableCell>
                   </TableRow>
                 ))}

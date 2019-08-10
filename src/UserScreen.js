@@ -2,7 +2,6 @@ import React from "react";
 import BoxDimension from "./BoxDimension";
 import ConfirmCode from "./ConfirmCode";
 import SignIn from "./SignIn";
-import Display from "./Display";
 import Location from "./Location";
 import AdditionalCharges from "./AdditionalCharges";
 import Report from "./Report";
@@ -50,7 +49,7 @@ class UserScreen extends React.Component {
             onTokenChange={this.onTokenChange}
             userToken={this.state.userToken}
           />
-        )} 
+        )}
         {this.state.screen === "dashboard" && (
           <Styling
             changeScreen={this.changeScreen}
@@ -91,14 +90,6 @@ class UserScreen extends React.Component {
             box={this.state.boxEditing}
           />
         )}
-        {this.state.screen === "Display" && (
-          <Display
-            changeScreen={this.changeScreen}
-            userToken={this.state.userToken}
-            onTokenChange={this.onTokenChange}
-            onProcessIdChange={this.onProcessIdChange}
-            ProcessID={this.state.ProcessID}
-          />
         )}
         {this.state.screen === "addcharge" && (
           <AdditionalCharges
