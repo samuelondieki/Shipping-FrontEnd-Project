@@ -11,7 +11,6 @@ import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 
-
 const styles = theme => ({
   "@global": {
     body: {
@@ -51,7 +50,7 @@ class SignIn extends React.Component {
     super(props);
     this.state = {
       action: "login",
-      email: "patrick.m@evermethod.com",
+      email: "samuel.b@evermethod.com",
       password: "",
       token: "",
       apiToken: 9640783,
@@ -69,8 +68,6 @@ class SignIn extends React.Component {
     this.setState({ [event.target.name]: event.target.value });
   };
 
-
- 
   //login a user
   login = () => {
     let url = `https://api.wynum.com/loginapi?username=${
@@ -217,7 +214,6 @@ class SignIn extends React.Component {
                   this.login();
                 }}
                 // className={classes.submit}
-
               >
                 Sign In / Sign Up
               </Button>

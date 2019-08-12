@@ -1,15 +1,7 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import MenuItem from "@material-ui/core/MenuItem";
-import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
-import { spacing } from "@material-ui/system";
 import { withStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
-import Container from "@material-ui/core/Container";
-import Avatar from "@material-ui/core/Avatar";
 import PropTypes from "prop-types";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -18,13 +10,11 @@ import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import signin from "./SignIn";
 import IconButton from "@material-ui/core/IconButton";
-import Checkbox from "@material-ui/core/Checkbox";
 import Create from "@material-ui/icons/Create";
-import Computer from "@material-ui/icons/Computer";
-import Switch from "@material-ui/core/Switch";
 import DeleteIcon from "@material-ui/icons/Delete";
+import CloudUploadOutlined from "@material-ui/icons/CloudUpload";
+import { ExportReactCSV } from "./ExportReactCSV";
 import Fab from "@material-ui/core/Fab";
 import axios from "axios";
 
@@ -59,6 +49,20 @@ const styles = theme => ({
   formControl: {
     margin: theme.spacing.unit,
     minWidth: 120
+  },
+  headline: {
+    left: "10px",
+    marginLeft: "10px",
+    margin: "0.2em auto"
+  },
+  exportButton: {
+    left: "30px",
+    margin: "0.2em auto",
+    marginRight: "10px"
+  },
+
+  cloudUploadIcon: {
+    marginRight: "20px"
   }
 });
 
@@ -69,8 +73,8 @@ class BoxReport extends React.Component {
       //   process_ID: "16",
       token: props.userToken,
       process_ID:props.ProcessID,
-
       boxes: []
+
     };
     console.log("token:", this.state.token);
     console.log("process id", this.state.process_ID);
@@ -117,10 +121,40 @@ class BoxReport extends React.Component {
     return (
       <Grid container className={classes.root} spacing={24}>
         <CssBaseline />
+
         <div className={classes.paper}>
-          <Typography component="h1" variant="h5">
-            Boxing Report
-          </Typography>
+          <Grid item xs={12}>
+            <Typography
+              component="h1"
+              variant="h5"
+              className={classes.exportButton}
+            >
+              Boxes Report
+              <Fab
+                color="primary"
+                variant="extended"
+                size="large"
+                aria-label="export"
+                style={styles.button}
+                className={classes.exportButton}
+                value="export"
+                onClick={() => {}}
+              >
+                <CloudUploadOutlined
+                  className={classes.extendedIcon}
+                  className="cloudUploadIcon"
+                />
+                Export
+              </Fab>
+              <div className="col-md-4 center">
+                <ExportReactCSV
+                  csvData={this.state.box}
+                  fileName={this.state.fileName}
+                />
+              </div>
+            </Typography>
+          </Grid>
+
           <div>
             <Table>
               <TableHead>
@@ -165,7 +199,7 @@ class BoxReport extends React.Component {
                         color="primary"
                         onClick={() => {
                           //   this.props.changeScreen("box_update");
-                         
+
                           this.handleEdit(boxes);
                         }}
                       >
@@ -177,10 +211,6 @@ class BoxReport extends React.Component {
                         arial-label="Delete"
                         size="small"
                         color="primary"
-                        // onClick={() => {
-                        // //   console.log("Users:", users.user_id);
-                        // //   this.deleteUser(users.user_id);
-                        // }}
                       >
                         <DeleteIcon />
                       </IconButton>
@@ -189,25 +219,6 @@ class BoxReport extends React.Component {
                 ))}
               </TableBody>
             </Table>
-
-            {/* <Button
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              onClick={this.getBoxes}
-            >
-              Next
-            </Button> */}
-
-            {/* <ul>
-              {this.getBoxes}
-              {types.boxes.map(box => (
-                <li key={box.id}>
-                  Total Boxes: {box.Total_Boxes} | Total Weight:{" "}
-                  {box.Total_Palette_Weight}
-                </li>
-              ))}
-            </ul> */}
           </div>
         </div>
       </Grid>
