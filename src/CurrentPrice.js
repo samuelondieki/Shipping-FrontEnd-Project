@@ -1,7 +1,7 @@
 import React from "react";
 import Grid from "@material-ui/core/Grid";
-import { spacing } from "@material-ui/system";
 import { withStyles } from "@material-ui/core/styles";
+import Button from "@material-ui/core/Button";
 import PropTypes from "prop-types";
 import Typography from "@material-ui/core/Typography";
 import Table from "@material-ui/core/Table";
@@ -11,8 +11,6 @@ import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import CloudUploadOutlined from "@material-ui/icons/CloudUpload";
-import Fab from "@material-ui/core/Fab";
 import axios from "axios";
 
 const styles = theme => ({
@@ -46,95 +44,59 @@ const styles = theme => ({
   formControl: {
     margin: theme.spacing.unit,
     minWidth: 120
-  },
-  headline: {
-    left: "10px",
-    marginLeft: "10px",
-    margin: "0.2em auto"
-  },
-  exportButton: {
-    left: "30px",
-    margin: "0.2em auto",
-    marginRight: "10px"
-  },
-
-  cloudUploadIcon: {
-    marginRight: "20px"
   }
 });
 
-class Report extends React.Component {
+class CurrentPrice extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      process_ID: "",
       token: props.userToken,
-      apiToken: 7819284,
-      boxes: [],
+      price: []
     };
-    console.log("token:", this.state.token);
   }
 
   handleChange = event => {
     this.setState({ [event.target.name]: event.target.value });
   };
 
-  getBoxes = () => {
-    let url = `https://api.wynum.com/getallStage/0b4f81c827700d711263e4d75a395609?token=${this.state.token}`;
-    //let url = `https://api.wynum.com/getallStage/71f71ac6b3200cdd83ef34725b9aa501?user_email=${this.state.email}&token=${this.state.token}`;
+  getPrice = () => {
+    let url = `https://api.wynum.com/getallStage/7056f8348c592492f69acfd8bc3dbe7a?token=${this.state.token}`;
     axios.get(url).then(res => {
       console.log(res.data);
-      this.setState({ boxes: res.data });
+      this.setState({ price: res.data });
     });
   };
 
- 
+  //handle edit button
+//   handleEdit = box => {
+//     this.props.changeToEdit(box);
+//   };
+
   componentDidMount() {
-    this.getBoxes();
+    this.getPrice();
   }
 
   render() {
     const { classes, order, orderBy } = this.props;
-    const types = this.state.boxes;
+    const types = this.state.price;
 
     //row headers
     const headRows = [
-      { id: "process_id", label: "Process ID" },
-      { id: "total_weight", label: "Total Pallete Weight" },
-      { id: "total_boxes", label: "Total Boxes" },
-      { id: "to", label: "To" },
-      { id: "from", label: "From" },
-      { id: "price", label: "Final Price" }
+      { id: "China/Seattle", label: "China to Seattle" },
+      { id: "China/Inland", label: "China to Inland/Railway" },
+      { id: "Seattle/China", label: "Seattle to China" },
+      { id: "Seattle/Inland", label: "Seattle to Inland/Railway" },
+      { id: "Inland/China", label: "Inland/Railway to China" },
+      { id: "Inland/Seattle", label: "Inland/Railway to Seattle" },
     ];
     return (
       <Grid container className={classes.root} spacing={24}>
         <CssBaseline />
         <div className={classes.paper}>
-          <Grid item xs={12}>
-            <Typography
-              component="h1"
-              variant="h5"
-              className={classes.exportButton}
-            >
-              Shipping Calculations
-              <Fab
-                color="primary"
-                variant="extended"
-                size="large"
-                aria-label="export"
-                style={styles.button}
-                className={classes.exportButton}
-                value="export"
-                onClick={() => {}}
-              >
-                <CloudUploadOutlined
-                  className={classes.extendedIcon}
-                  className="cloudUploadIcon"
-                />
-                Export
-              </Fab>
-            </Typography>
-          </Grid>
+          <Typography component="h1" variant="h5">
+            Current Shipping Prices in USD
+          </Typography>
           <div>
             <Table>
               <TableHead>
@@ -144,7 +106,7 @@ class Report extends React.Component {
                       key={row.id}
                       align={row.numeric ? "right" : "left"}
                       padding={row.disablePadding ? "none" : "default"}
-                      // sortDirection={orderBy === row.id ? order : false}
+                      sortDirection={orderBy === row.id ? order : false}
                     >
                       <TableSortLabel>{row.label}</TableSortLabel>
                     </TableCell>
@@ -152,38 +114,49 @@ class Report extends React.Component {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {types.map(boxes => (
-                  <TableRow key={boxes.process_id} hover>
+                {types.map(price => (
+                  <TableRow key={price.process_id} hover>
                     <TableCell component="th" scope="row">
-                      {boxes.process_ID}
+                      {price.China_Seattle}
                     </TableCell>
                     <TableCell component="th" scope="row">
-                      {boxes.Total_Boxes}
-                    </TableCell>
-                    <TableCell component="th" scope="row">
-                      {boxes.Total_Palette_Weight}
+                      {price.China_Inland}
                     </TableCell>{" "}
                     <TableCell component="th" scope="row">
-                      {boxes.To}
+                      {price.Seattle_China}
                     </TableCell>{" "}
                     <TableCell component="th" scope="row">
-                      {boxes.From}
+                      {price.Seattle_Inland}
                     </TableCell>
                     <TableCell component="th" scope="row">
-                      {boxes.Final_Price}
+                      {price.Inland_China}
+                    </TableCell>
+                    <TableCell component="th" scope="row">
+                      {price.Inland_Seattle}
                     </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
+
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              onClick={() => {
+                this.props.changeScreen("price"); 
+              }}
+            >
+              Change Shipping Prices
+            </Button>
           </div>
         </div>
       </Grid>
     );
   }
 }
-Report.propTypes = {
+CurrentPrice.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(Report);
+export default withStyles(styles)(CurrentPrice);

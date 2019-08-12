@@ -2,12 +2,17 @@ import React from "react";
 import BoxDimension from "./BoxDimension";
 import ConfirmCode from "./ConfirmCode";
 import SignIn from "./SignIn";
-import Location from "./Location";
+import Display from "./Display";
 import AdditionalCharges from "./AdditionalCharges";
+import Location from "./Location"
 import Report from "./Report";
 import Styling from "./Styling";
 import BoxReport from "./BoxReport";
 import UpdateBox from "./UpdateBox";
+import PalletSize from "./PalletSize";
+import CurrentPallet from "./CurrentPallet";
+import CurrentPrice from "./CurrentPrice";
+import ShipmentPrice from "./ShipmentPrice";
 
 class UserScreen extends React.Component {
   constructor(props) {
@@ -30,8 +35,8 @@ class UserScreen extends React.Component {
     this.setState({ userToken: token });
   };
 
-  onProcessIdChange = Process_ID => {
-    this.setState({ ProcessID: Process_ID });
+  onProcessIdChange = processID => {
+    this.setState({ ProcessID: processID });
   };
 
   changetoEdit = box => {
@@ -56,24 +61,36 @@ class UserScreen extends React.Component {
           <Styling
             changeScreen={this.changeScreen}
             userToken={this.state.userToken}
+            onProcessIdChange={this.onProcessIdChange}
+            ProcessID={this.state.ProcessID}
+            box={this.state.boxEditing}
           />
         )}
         {this.state.screen === "box" && (
           <BoxDimension
             changeScreen={this.changeScreen}
             userToken={this.state.userToken}
+            onProcessIdChange={this.onProcessIdChange}
+            ProcessID={this.state.ProcessID}
+            box={this.state.boxEditing}
           />
         )}
         {this.state.screen === "confirm" && (
           <ConfirmCode
             changeScreen={this.changeScreen}
             onTokenChange={this.onTokenChange}
+            onProcessIdChange={this.onProcessIdChange}
+            ProcessID={this.state.ProcessID}
+            box={this.state.boxEditing}
           />
         )}
         {this.state.screen === "report" && (
           <Report
             changeScreen={this.changeScreen}
             userToken={this.state.userToken}
+            onProcessIdChange={this.onProcessIdChange}
+            ProcessID={this.state.ProcessID}
+            box={this.state.boxEditing}
           />
         )}
         {this.state.screen === "box_report" && (
@@ -110,6 +127,38 @@ class UserScreen extends React.Component {
             onProcessIdChange={this.onProcessIdChange}
             ProcessID={this.state.ProcessID}
           />
+        )}
+        {this.state.screen === "PalletSize" && (
+          <PalletSize changeScreen={this.changeScreen}  
+          userToken={this.state.userToken}
+          onTokenChange={this.onTokenChange}
+          onProcessIdChange={this.onProcessIdChange}
+          ProcessID={this.state.ProcessID}/>
+
+        )}
+        {this.state.screen === "Pallet" && (
+          <CurrentPallet changeScreen={this.changeScreen}  
+          userToken={this.state.userToken}
+          onTokenChange={this.onTokenChange}
+          onProcessIdChange={this.onProcessIdChange}
+          ProcessID={this.state.ProcessID}/>
+
+        )}
+        {this.state.screen === "currentprice" && (
+          <CurrentPrice changeScreen={this.changeScreen}  
+          userToken={this.state.userToken}
+          onTokenChange={this.onTokenChange}
+          onProcessIdChange={this.onProcessIdChange}
+          ProcessID={this.state.ProcessID}/>
+
+        )}
+        {this.state.screen === "price" && (
+          <ShipmentPrice changeScreen={this.changeScreen}  
+          userToken={this.state.userToken}
+          onTokenChange={this.onTokenChange}
+          onProcessIdChange={this.onProcessIdChange}
+          ProcessID={this.state.ProcessID}/>
+
         )}
         )
       </div>

@@ -1,9 +1,6 @@
 import React from "react";
-import { makeStyles, recomposeColor } from "@material-ui/core/styles";
-import MenuItem from "@material-ui/core/MenuItem";
 import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
-import { spacing } from "@material-ui/system";
 import { withStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Container from "@material-ui/core/Container";
@@ -12,8 +9,6 @@ import PropTypes, { number } from "prop-types";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import CssBaseline from "@material-ui/core/CssBaseline";
-
-import Fab from "@material-ui/core/Fab";
 import axios from "axios";
 
 const styles = theme => ({
@@ -58,18 +53,19 @@ const styles = theme => ({
   }
 });
 
-class BoxDimension extends React.Component {
+class ShipmentPrice extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      length: "",
-      width: "",
-      height: "",
-      weight: "",
-      boxes: [],
+      ChinaSeattle: "",
+      ChinaInland: "",
+      SeattleChina: "",
+      SeattleInland: "",
+      InlandChina: "",
+      InlandSeattle: "",
       token: props.userToken,
-      apiToken: 9640783,
-      pallet:"",
+      process_ID: "1",
+      apiToken: 9640783
     };
   }
 
@@ -77,77 +73,44 @@ class BoxDimension extends React.Component {
     this.setState({ [event.target.name]: event.target.value });
   };
 
-  //handle random process ID generation
-  makeid = length => {
-    var result = "";
-    var characters =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    var charactersLength = characters.length;
-    for (var i = 0; i < length; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
-  };
-  // to get the size of the pallet
-  getPallet = () => {
-    let url = `https://api.wynum.com/getStage/1a57f534cbe01527ffe492a10ddf16c8?token=${this.state.token}`;
-    axios.get(url).then(res => {
-      console.log(res.data);
-      this.setState({ pallet: res.data["Pallet_volume"] });
-      console.log(this.state.pallet)
-    });
-  };
+//   //handle random process ID generation
+//   makeid = length => {
+//     var result = "";
+//     var characters =
+//       "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+//     var charactersLength = characters.length;
+//     for (var i = 0; i < length; i++) {
+//       result += characters.charAt(Math.floor(Math.random() * charactersLength));
+//     }
+//     return result;
+//   };
 
-  
-
-  // to post pallet volume to wynum
-  addPallet = () => {
+  //post request to add new prices
+  addPrice = () => {
     var boxContext = this;
-    let newPallet = {
-      New_Pallet_Volume: this.state.pallet,
-      process_ID: this.state.Process_ID,
+    let price = {
+      China_Seattle: parseInt(this.state.ChinaSeattle),
+      China_Inland: parseInt(this.state.ChinaInland),
+      Seattle_China: parseInt(this.state.SeattleChina),
+      Seattle_Inland: parseInt(this.state.SeattleInland),
+      Inland_China: parseInt(this.state.InlandChina),
+      Inland_Seattle: parseInt(this.state.InlandSeattle),
+      process_ID: this.state.process_ID,
     };
 
-    this.state.boxes.splice(0, 0, newPallet);
-    console.log("token:", newPallet.New_Pallet_Volume);
-    const url = `https://api.wynum.com/postStage/61c8059f6f09dfac2a05cf1df2e01991?token=${this.state.token}`;
+    this.state.boxes.splice(0, 0, price);
+    // console.log("token:", this.state.token);
+    // this.props.onProcessIdChange(this.state.process_ID);
+    const url = `https://api.wynum.com/updateStage/9ddf6b0b9b719bf12bf61d78aeae245b?token=${this.state.token}`;
+    // console.log("box", price);
     var config = { headers: { "Content-Type": "application/json" } };
-    axios.post(url, JSON.stringify(newPallet), config).then(res => {
-     
+    axios.post(url, JSON.stringify(price), config).then(res => {
+    //   console.log("box after ", price);
+    //   console.log(res.data);
     });
+    // console.log(boxContext.state.process_ID);
+    this.props.changeScreen("dashboard") //will have to change to pallet screen
   };
-
-
-
-  //post request to add box
-  addBox = () => {
-    var boxContext = this;
-    let box = {
-      Length: parseInt(this.state.length),
-      Width: parseInt(this.state.width),
-      Height: parseInt(this.state.height),
-      Weight: parseInt(this.state.weight),
-      process_ID: this.makeid(6),
-    };
-
-    this.state.boxes.splice(0, 0, box);
-    console.log("token:", this.state.token);
-    const url = `https://api.wynum.com/postStage/c02a19c943023456484c903018ee9708?token=${this.state.token}`;
-    console.log("box", box);
-    var config = { headers: { "Content-Type": "application/json" } };
-    axios.post(url, JSON.stringify(box), config).then(res => {
-      console.log("box after ", box);
-      console.log(res.data);
-    });
-    this.addPallet();
-    console.log(box.process_ID);
-    this.props.onProcessIdChange(box.process_ID);
-    this.props.changeScreen("location");
-  };
-
-  componentDidMount() {
-    this.getPallet();
-  }
 
   render() {
     const { classes } = this.props;
@@ -157,17 +120,17 @@ class BoxDimension extends React.Component {
           <CssBaseline />
           <div className={classes.paper}>
             <Typography component="h1" variant="h5">
-              Add Box
+              Change Shipping Prices
             </Typography>
 
             <TextField
               id="outlined-name"
               type="number"
-              label="Length"
-              value={this.state.length}
+              label="China To Seattle"
+              value={this.state.ChinaSeattle}
               onChange={this.handleChange}
               inputProps={{
-                name: "length"
+                name: "ChinaSeattle"
               }}
               margin="normal"
               variant="outlined"
@@ -175,12 +138,12 @@ class BoxDimension extends React.Component {
 
             <TextField
               id="outlined-name"
-              label="Width"
+              label="China To Inland/Railway"
               type="number"
-              value={this.state.width}
+              value={this.state.ChinaInland}
               onChange={this.handleChange}
               inputProps={{
-                name: "width"
+                name: "ChinaInland"
               }}
               margin="normal"
               variant="outlined"
@@ -188,12 +151,12 @@ class BoxDimension extends React.Component {
 
             <TextField
               id="outlined-name"
-              label="Height"
+              label="Seattle To China"
               type="number"
-              value={this.state.height}
+              value={this.state.SeattleChina}
               onChange={this.handleChange}
               inputProps={{
-                name: "height"
+                name: "SeattleChina"
               }}
               margin="normal"
               variant="outlined"
@@ -201,46 +164,64 @@ class BoxDimension extends React.Component {
 
             <TextField
               id="outlined-name"
-              label="Weight"
+              label="Seattle To Inland/Railway"
               type="number"
-              value={this.state.weight}
+              value={this.state.SeattleInland}
               onChange={this.handleChange}
               inputProps={{
-                name: "weight"
+                name: "SeattleInland"
               }}
               margin="normal"
               variant="outlined"
             />
+
+            <TextField
+              id="outlined-name"
+              label="Inland/Railway To China"
+              type="number"
+              value={this.state.InlandChina}
+              onChange={this.handleChange}
+              inputProps={{
+                name: "InlandChina"
+              }}
+              margin="normal"
+              variant="outlined"
+            />
+
+            <TextField
+              id="outlined-name"
+              label="Inland/Railway To Seattle"
+              type="number"
+              value={this.state.InlandSeattle}
+              onChange={this.handleChange}
+              inputProps={{
+                name: "InlandSeattle"
+              }}
+              margin="normal"
+              variant="outlined"
+            />
+
+            
             <Grid item xs={12}>
               <Button
                 variant="contained"
                 color="primary"
                 className={classes.button}
-                onClick={this.addBox}
+                onClick={this.addPrice}
               >
                 ADD
               </Button>
 
-              {/* <Button
+              <Button
                 variant="contained"
                 color="primary"
                 className={classes.button}
                 onClick={() => {
-                  this.props.changeScreen("dashboard");
+                  this.props.changeScreen("Currentprice");
                 }}
               >
                 Cancel
-              </Button> */}
-
-              {/* Direct the user to location or next process  */}
-              {/* <Button
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                
-              >
-                Next
-              </Button> */}
+              </Button>
             </Grid>
           </div>
         </Container>
@@ -249,8 +230,8 @@ class BoxDimension extends React.Component {
     );
   }
 }
-BoxDimension.propTypes = {
+ShipmentPrice.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(BoxDimension);
+export default withStyles(styles)(ShipmentPrice);

@@ -72,11 +72,12 @@ class BoxReport extends React.Component {
     this.state = {
       //   process_ID: "16",
       token: props.userToken,
-      boxes: [],
-      box: this.getBoxes(),
-      fileName: "Boxes_sheet"
+      process_ID:props.ProcessID,
+      boxes: []
+
     };
     console.log("token:", this.state.token);
+    console.log("process id", this.state.process_ID);
   }
 
   handleChange = event => {
