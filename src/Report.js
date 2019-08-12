@@ -11,6 +11,8 @@ import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
 import CssBaseline from "@material-ui/core/CssBaseline";
+import CloudUploadOutlined from "@material-ui/icons/CloudUpload";
+import Fab from "@material-ui/core/Fab";
 import axios from "axios";
 
 const styles = theme => ({
@@ -44,6 +46,20 @@ const styles = theme => ({
   formControl: {
     margin: theme.spacing.unit,
     minWidth: 120
+  },
+  headline: {
+    left: "10px",
+    marginLeft: "10px",
+    margin: "0.2em auto"
+  },
+  exportButton: {
+    left: "30px",
+    margin: "0.2em auto",
+    marginRight: "10px"
+  },
+
+  cloudUploadIcon: {
+    marginRight: "20px"
   }
 });
 
@@ -95,9 +111,31 @@ class Report extends React.Component {
       <Grid container className={classes.root} spacing={24}>
         <CssBaseline />
         <div className={classes.paper}>
-          <Typography component="h1" variant="h5">
-            Shipping Calculator Report
-          </Typography>
+          <Grid item xs={12}>
+            <Typography
+              component="h1"
+              variant="h5"
+              className={classes.exportButton}
+            >
+              Shipping Calculations
+              <Fab
+                color="primary"
+                variant="extended"
+                size="large"
+                aria-label="export"
+                style={styles.button}
+                className={classes.exportButton}
+                value="export"
+                onClick={() => {}}
+              >
+                <CloudUploadOutlined
+                  className={classes.extendedIcon}
+                  className="cloudUploadIcon"
+                />
+                Export
+              </Fab>
+            </Typography>
+          </Grid>
           <div>
             <Table>
               <TableHead>
@@ -107,7 +145,7 @@ class Report extends React.Component {
                       key={row.id}
                       align={row.numeric ? "right" : "left"}
                       padding={row.disablePadding ? "none" : "default"}
-                     // sortDirection={orderBy === row.id ? order : false}
+                      // sortDirection={orderBy === row.id ? order : false}
                     >
                       <TableSortLabel>{row.label}</TableSortLabel>
                     </TableCell>
@@ -133,7 +171,7 @@ class Report extends React.Component {
                       {boxes.From}
                     </TableCell>
                     <TableCell component="th" scope="row">
-                      {boxes.Final_price}
+                      {boxes.Final_Price}
                     </TableCell>
                   </TableRow>
                 ))}
