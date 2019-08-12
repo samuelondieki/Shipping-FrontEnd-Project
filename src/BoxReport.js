@@ -13,6 +13,9 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import IconButton from "@material-ui/core/IconButton";
 import Create from "@material-ui/icons/Create";
 import DeleteIcon from "@material-ui/icons/Delete";
+import CloudUploadOutlined from "@material-ui/icons/CloudUpload";
+import { ExportReactCSV } from "./ExportReactCSV";
+import Fab from "@material-ui/core/Fab";
 import axios from "axios";
 
 const styles = theme => ({
@@ -46,6 +49,20 @@ const styles = theme => ({
   formControl: {
     margin: theme.spacing.unit,
     minWidth: 120
+  },
+  headline: {
+    left: "10px",
+    marginLeft: "10px",
+    margin: "0.2em auto"
+  },
+  exportButton: {
+    left: "30px",
+    margin: "0.2em auto",
+    marginRight: "10px"
+  },
+
+  cloudUploadIcon: {
+    marginRight: "20px"
   }
 });
 
@@ -55,8 +72,9 @@ class BoxReport extends React.Component {
     this.state = {
       //   process_ID: "16",
       token: props.userToken,
-
-      boxes: []
+      boxes: [],
+      box: this.getBoxes(),
+      fileName: "Boxes_sheet"
     };
     console.log("token:", this.state.token);
   }
@@ -102,10 +120,40 @@ class BoxReport extends React.Component {
     return (
       <Grid container className={classes.root} spacing={24}>
         <CssBaseline />
+
         <div className={classes.paper}>
-          <Typography component="h1" variant="h5">
-            Boxing Report
-          </Typography>
+          <Grid item xs={12}>
+            <Typography
+              component="h1"
+              variant="h5"
+              className={classes.exportButton}
+            >
+              Boxes Report
+              <Fab
+                color="primary"
+                variant="extended"
+                size="large"
+                aria-label="export"
+                style={styles.button}
+                className={classes.exportButton}
+                value="export"
+                onClick={() => {}}
+              >
+                <CloudUploadOutlined
+                  className={classes.extendedIcon}
+                  className="cloudUploadIcon"
+                />
+                Export
+              </Fab>
+              <div className="col-md-4 center">
+                <ExportReactCSV
+                  csvData={this.state.box}
+                  fileName={this.state.fileName}
+                />
+              </div>
+            </Typography>
+          </Grid>
+
           <div>
             <Table>
               <TableHead>
@@ -162,10 +210,6 @@ class BoxReport extends React.Component {
                         arial-label="Delete"
                         size="small"
                         color="primary"
-                        // onClick={() => {
-                        // //   console.log("Users:", users.user_id);
-                        // //   this.deleteUser(users.user_id);
-                        // }}
                       >
                         <DeleteIcon />
                       </IconButton>
@@ -174,25 +218,6 @@ class BoxReport extends React.Component {
                 ))}
               </TableBody>
             </Table>
-
-            {/* <Button
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              onClick={this.getBoxes}
-            >
-              Next
-            </Button> */}
-
-            {/* <ul>
-              {this.getBoxes}
-              {types.boxes.map(box => (
-                <li key={box.id}>
-                  Total Boxes: {box.Total_Boxes} | Total Weight:{" "}
-                  {box.Total_Palette_Weight}
-                </li>
-              ))}
-            </ul> */}
           </div>
         </div>
       </Grid>

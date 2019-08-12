@@ -48,8 +48,10 @@ class UserScreen extends React.Component {
             box={this.state.token}
             onTokenChange={this.onTokenChange}
             userToken={this.state.userToken}
+            onProcessIdChange={this.onProcessIdChange}
           />
         )}
+        
         {this.state.screen === "dashboard" && (
           <Styling
             changeScreen={this.changeScreen}
