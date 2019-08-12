@@ -61,8 +61,10 @@ class Location extends React.Component {
       boxes:[],
       token: props.userToken,
       apiToken: 9640783,
-      process_ID: "565",
+      process_ID: props.ProcessID,
       charge: "0",
+      values:[],
+      price:"",
     };
   }
   handleChange = event => {
@@ -80,9 +82,48 @@ class Location extends React.Component {
 //     return result;
 //   };
 
+//get proper shipment pricing
+findValue = () => {
+  if (this.state.departure === "China" & this.state.arrival === "Seattle") this.setState({ price: this.state.values["China_Seattle"] });
+  if (this.state.departure === "China" & this.state.arrival === "Inland/Railway") this.setState({ price: this.state.values["China_Inland"] });
+  if (this.state.departure === "Seattle" & this.state.arrival === "China") this.setState({ price: this.state.values["Seattle_China"] });
+  if (this.state.departure === "Seattle" & this.state.arrival === "Inland/Railway") this.setState({ price: this.state.values["Seattle_Inland"] });
+  if (this.state.departure === "Inland/Railway" & this.state.arrival === "China") this.setState({ price: this.state.values["Inland_Seattle"] });
+  if (this.state.departure === "Inland/Railway" & this.state.arrival === "Seattle") this.setState({ price: this.state.values["Inland_Seattle"] });
+    
+};
+
+
+//to get the shippment pricing
+getValues = () => {
+  let url = `https://api.wynum.com/getallStage/7056f8348c592492f69acfd8bc3dbe7a?token=${this.state.token}`;
+  axios.get(url).then(res => {
+    console.log(res.data);
+    this.setState({ values: res.data });
+    console.log(this.state.values)
+  });
+};
+
+//add the new values to wynum
+addValues= () => {
+  var locationcontext = this;
+  let newValues = {
+    get_Price: this.state.price,
+    process_ID: this.state.process_ID
+  };
+  this.state.boxes.splice(0, 0, newValues);
+  console.log("token:", this.state.token);
+  const url = `https://api.wynum.com/postStage/61c8059f6f09dfac2a05cf1df2e01991?token=${this.state.token}`;
+  console.log("box", newValues);
+  var config = { headers: { "Content-Type": "application/json" } };
+  axios.post(url, JSON.stringify(newValues), config).then(res => {
+    console.log("box after ", newValues);
+  });
+};
+
   //post request to additional charges with 0 default value
 
-  adddefaultCharge = () => {
+  addDefaultCharge = () => {
     var chargeContext = this;
 
     var charge = {
@@ -104,8 +145,6 @@ class Location extends React.Component {
     axios.post(url, JSON.stringify(charge), config).then(res => {
      // console.log(res.data);
     });
-    //console.log(boxContext.state.process_ID);
-    this.props.changeScreen("Display");
   };
   
   //post request to location
@@ -125,15 +164,17 @@ class Location extends React.Component {
     axios.post(url, JSON.stringify(location), config).then(res => {
       console.log("box after ", location);
       console.log(res.data);
-      this.adddefaultCharge();
-      this.props.changeScreen("Display");
+      this.findValue();
+      this.addDefaultCharge();
+      this.addValues();
+      this.props.changeScreen("dashboard");
     });
   };
 
   addcharge = () => {
     var locationcontext2 = this;
     let location2 = {
-        shipment_Location_DepartingLength: locationcontext2.state.departure,
+        shipment_Location_Departing: locationcontext2.state.departure,
         shipment_Location_Destination: locationcontext2.state.arrival,
         process_ID: locationcontext2.state.process_ID
     };
@@ -145,9 +186,16 @@ class Location extends React.Component {
     axios.post(url, JSON.stringify(location2), config).then(res => {
       console.log("box after ", location2);
       console.log(res.data);
+      this.findValue();
+      this.addValues();
       this.props.changeScreen("addcharge");
     });
   };
+
+  componentDidMount() {
+    this.getValues();
+  }
+
   render() {
     const { classes } = this.props;
     return (

@@ -32,6 +32,12 @@ import BoxDimension from "./BoxDimension";
 import Report from "./Report";
 import BoxReport from "./BoxReport";
 import UpdateBox from "./UpdateBox";
+import AdditionalCharge from "./AdditionalCharges";
+import Location from "./Location";
+import PalletSize from "./PalletSize";
+import CurrentPallet from "./CurrentPallet";
+import ShipmentPrice from "./ShipmentPrice";
+import CurrentPrice from "./CurrentPrice";
 
 const drawerWidth = 240;
 
@@ -234,6 +240,28 @@ class Styling extends React.Component {
               </ListItemIcon>
               <ListItemText primary="Add Container" />
             </ListItem>
+            <ListItem
+              button
+              onClick={() => {
+                this.setState({ screen: "Pallet" });
+              }}
+            >
+              <ListItemIcon>
+                <QuestionAnswer />
+              </ListItemIcon>
+              <ListItemText primary="Pallet Size" />
+            </ListItem>
+            <ListItem
+              button
+              onClick={() => {
+                this.setState({ screen: "currentprice" });
+              }}
+            >
+              <ListItemIcon>
+                <QuestionAnswer />
+              </ListItemIcon>
+              <ListItemText primary="Shipping Price" />
+            </ListItem>
           </List>
         </Drawer>
         <main className={classes.content}>
@@ -242,12 +270,17 @@ class Styling extends React.Component {
             <Report
               changeScreen={this.props.changeScreen}
               userToken={this.props.userToken}
+              onProcessIdChange={this.props.onProcessIdChange}
+              ProcessID={this.state.ProcessID}
+              
             />
           )}
           {this.state.screen === "box" && (
             <BoxDimension
               changeScreen={this.props.changeScreen}
               userToken={this.props.userToken}
+              onProcessIdChange={this.props.onProcessIdChange}
+              ProcessID={this.state.ProcessID}
             />
           )}
 
@@ -255,6 +288,63 @@ class Styling extends React.Component {
             <BoxReport
               changeScreen={this.props.changeScreen}
               userToken={this.props.userToken}
+              onProcessIdChange={this.props.onProcessIdChange}
+              ProcessID={this.state.ProcessID}
+              
+            />
+          )}
+          {this.state.screen === "Location" && (
+            <Location
+              changeScreen={this.props.changeScreen}
+              userToken={this.props.userToken}
+              onProcessIdChange={this.props.onProcessIdChange}
+              ProcessID={this.state.ProcessID}
+              
+            />
+          )}
+          {this.state.screen === "addcharge" && (
+            <AdditionalCharge
+              changeScreen={this.props.changeScreen}
+              userToken={this.props.userToken}
+              onProcessIdChange={this.props.onProcessIdChange}
+              ProcessID={this.state.ProcessID}
+              
+            />
+          )}
+           {this.state.screen === "Pallet" && (
+            <CurrentPallet
+              changeScreen={this.props.changeScreen}
+              userToken={this.props.userToken}
+              onProcessIdChange={this.props.onProcessIdChange}
+              ProcessID={this.state.ProcessID}
+              
+            />
+          )}
+           {this.state.screen === "palletsize" && (
+            <PalletSize
+              changeScreen={this.props.changeScreen}
+              userToken={this.props.userToken}
+              onProcessIdChange={this.props.onProcessIdChange}
+              ProcessID={this.state.ProcessID}
+             
+            />
+          )}
+          {this.state.screen === "price" && (
+            <ShipmentPrice
+              changeScreen={this.props.changeScreen}
+              userToken={this.props.userToken}
+              onProcessIdChange={this.props.onProcessIdChange}
+              ProcessID={this.state.ProcessID}
+             
+            />
+          )}
+          {this.state.screen === "currentprice" && (
+            <CurrentPrice
+              changeScreen={this.props.changeScreen}
+              userToken={this.props.userToken}
+              onProcessIdChange={this.props.onProcessIdChange}
+              ProcessID={this.state.ProcessID}
+              
             />
           )}
           {/* {this.state.screen === "box_update" && (

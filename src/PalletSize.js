@@ -1,9 +1,6 @@
 import React from "react";
-import { makeStyles, recomposeColor } from "@material-ui/core/styles";
-import MenuItem from "@material-ui/core/MenuItem";
 import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
-import { spacing } from "@material-ui/system";
 import { withStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Container from "@material-ui/core/Container";
@@ -12,8 +9,6 @@ import PropTypes, { number } from "prop-types";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import CssBaseline from "@material-ui/core/CssBaseline";
-
-import Fab from "@material-ui/core/Fab";
 import axios from "axios";
 
 const styles = theme => ({
@@ -58,18 +53,17 @@ const styles = theme => ({
   }
 });
 
-class BoxDimension extends React.Component {
+class PalletSize extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      length: "",
-      width: "",
-      height: "",
-      weight: "",
-      boxes: [],
+      length: "48",
+      width: "40",
+      height: "6",
       token: props.userToken,
+      process_ID: "1",
       apiToken: 9640783,
-      pallet:"",
+      boxes:[],
     };
   }
 
@@ -77,77 +71,41 @@ class BoxDimension extends React.Component {
     this.setState({ [event.target.name]: event.target.value });
   };
 
-  //handle random process ID generation
-  makeid = length => {
-    var result = "";
-    var characters =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    var charactersLength = characters.length;
-    for (var i = 0; i < length; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
-  };
-  // to get the size of the pallet
-  getPallet = () => {
-    let url = `https://api.wynum.com/getStage/1a57f534cbe01527ffe492a10ddf16c8?token=${this.state.token}`;
-    axios.get(url).then(res => {
-      console.log(res.data);
-      this.setState({ pallet: res.data["Pallet_volume"] });
-      console.log(this.state.pallet)
-    });
-  };
+//   //handle random process ID generation
+//   makeid = length => {
+//     var result = "";
+//     var characters =
+//       "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+//     var charactersLength = characters.length;
+//     for (var i = 0; i < length; i++) {
+//       result += characters.charAt(Math.floor(Math.random() * charactersLength));
+//     }
+//     return result;
+//   };
 
-  
-
-  // to post pallet volume to wynum
+  //post request add new pallet size
   addPallet = () => {
     var boxContext = this;
-    let newPallet = {
-      New_Pallet_Volume: this.state.pallet,
-      process_ID: this.state.Process_ID,
-    };
-
-    this.state.boxes.splice(0, 0, newPallet);
-    console.log("token:", newPallet.New_Pallet_Volume);
-    const url = `https://api.wynum.com/postStage/61c8059f6f09dfac2a05cf1df2e01991?token=${this.state.token}`;
-    var config = { headers: { "Content-Type": "application/json" } };
-    axios.post(url, JSON.stringify(newPallet), config).then(res => {
-     
-    });
-  };
-
-
-
-  //post request to add box
-  addBox = () => {
-    var boxContext = this;
-    let box = {
+    let pallet = {
       Length: parseInt(this.state.length),
       Width: parseInt(this.state.width),
       Height: parseInt(this.state.height),
-      Weight: parseInt(this.state.weight),
-      process_ID: this.makeid(6),
+      process_ID: this.state.process_ID,
     };
 
-    this.state.boxes.splice(0, 0, box);
-    console.log("token:", this.state.token);
-    const url = `https://api.wynum.com/postStage/c02a19c943023456484c903018ee9708?token=${this.state.token}`;
-    console.log("box", box);
+    this.state.boxes.splice(0, 0, pallet);
+    // console.log("token:", this.state.token);
+    // this.props.onProcessIdChange(this.state.process_ID);
+    const url = `https://api.wynum.com/updateStage/84870c11fa2db518cd9b359de87f4f97?token=${this.state.token}`;
+    // console.log("box", pallet);
     var config = { headers: { "Content-Type": "application/json" } };
-    axios.post(url, JSON.stringify(box), config).then(res => {
-      console.log("box after ", box);
-      console.log(res.data);
+    axios.post(url, JSON.stringify(pallet), config).then(res => {
+    //   console.log("box after ", pallet);
+    //   console.log(res.data);
     });
-    this.addPallet();
-    console.log(box.process_ID);
-    this.props.onProcessIdChange(box.process_ID);
-    this.props.changeScreen("location");
+    // console.log(boxContext.state.process_ID);
+    this.props.changeScreen("dashboard") //will have to change to pallet screen
   };
-
-  componentDidMount() {
-    this.getPallet();
-  }
 
   render() {
     const { classes } = this.props;
@@ -157,7 +115,7 @@ class BoxDimension extends React.Component {
           <CssBaseline />
           <div className={classes.paper}>
             <Typography component="h1" variant="h5">
-              Add Box
+              Add New Pallet Size
             </Typography>
 
             <TextField
@@ -199,38 +157,27 @@ class BoxDimension extends React.Component {
               variant="outlined"
             />
 
-            <TextField
-              id="outlined-name"
-              label="Weight"
-              type="number"
-              value={this.state.weight}
-              onChange={this.handleChange}
-              inputProps={{
-                name: "weight"
-              }}
-              margin="normal"
-              variant="outlined"
-            />
+            
             <Grid item xs={12}>
               <Button
                 variant="contained"
                 color="primary"
                 className={classes.button}
-                onClick={this.addBox}
+                onClick={this.addPallet}
               >
                 ADD
               </Button>
 
-              {/* <Button
+              <Button
                 variant="contained"
                 color="primary"
                 className={classes.button}
                 onClick={() => {
-                  this.props.changeScreen("dashboard");
+                  this.props.changeScreen("Pallet");
                 }}
               >
                 Cancel
-              </Button> */}
+              </Button>
 
               {/* Direct the user to location or next process  */}
               {/* <Button
@@ -249,8 +196,8 @@ class BoxDimension extends React.Component {
     );
   }
 }
-BoxDimension.propTypes = {
+PalletSize.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(BoxDimension);
+export default withStyles(styles)(PalletSize);

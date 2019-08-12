@@ -99,7 +99,7 @@ class AdditionalCharges extends React.Component {
      // console.log(res.data);
     });
     //console.log(boxContext.state.process_ID);
-    this.props.changeScreen("Display");
+    this.props.changeScreen("dashboard");
   };
 
   render() {
