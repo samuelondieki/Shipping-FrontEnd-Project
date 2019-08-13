@@ -93,7 +93,7 @@ class PalletSize extends React.Component {
       process_ID: this.state.process_ID,
     };
 
-    this.state.boxes.splice(0, 0, pallet);
+    // this.state.boxes.splice(0, 0, pallet);
     // console.log("token:", this.state.token);
     // this.props.onProcessIdChange(this.state.process_ID);
     const url = `https://api.wynum.com/updateStage/84870c11fa2db518cd9b359de87f4f97?token=${this.state.token}`;

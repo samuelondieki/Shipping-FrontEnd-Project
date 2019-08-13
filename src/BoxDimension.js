@@ -70,6 +70,7 @@ class BoxDimension extends React.Component {
       token: props.userToken,
       apiToken: 9640783,
       pallet:"",
+      process_ID: this.makeid(6),
     };
   }
 
@@ -105,10 +106,10 @@ class BoxDimension extends React.Component {
     var boxContext = this;
     let newPallet = {
       New_Pallet_Volume: this.state.pallet,
-      process_ID: this.state.Process_ID,
+      process_ID: this.state.process_ID,
     };
 
-    this.state.boxes.splice(0, 0, newPallet);
+    // this.state.boxes.splice(0, 0, newPallet);
     console.log("token:", newPallet.New_Pallet_Volume);
     const url = `https://api.wynum.com/postStage/61c8059f6f09dfac2a05cf1df2e01991?token=${this.state.token}`;
     var config = { headers: { "Content-Type": "application/json" } };
@@ -127,7 +128,7 @@ class BoxDimension extends React.Component {
       Width: parseInt(this.state.width),
       Height: parseInt(this.state.height),
       Weight: parseInt(this.state.weight),
-      process_ID: this.makeid(6),
+      process_ID: this.state.process_ID,
     };
 
     this.state.boxes.splice(0, 0, box);

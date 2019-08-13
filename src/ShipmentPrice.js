@@ -98,7 +98,7 @@ class ShipmentPrice extends React.Component {
       process_ID: this.state.process_ID,
     };
 
-    this.state.boxes.splice(0, 0, price);
+    // this.state.boxes.splice(0, 0, price);
     // console.log("token:", this.state.token);
     // this.props.onProcessIdChange(this.state.process_ID);
     const url = `https://api.wynum.com/updateStage/9ddf6b0b9b719bf12bf61d78aeae245b?token=${this.state.token}`;

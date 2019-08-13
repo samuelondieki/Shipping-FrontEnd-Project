@@ -82,19 +82,40 @@ class Location extends React.Component {
 //     return result;
 //   };
 
-//get proper shipment pricing
+//get proper shipment pricing starts by tryig to find departure
 findValue = () => {
-  if (this.state.departure === "China" & this.state.arrival === "Seattle") this.setState({ price: this.state.values["China_Seattle"] });
-  if (this.state.departure === "China" & this.state.arrival === "Inland/Railway") this.setState({ price: this.state.values["China_Inland"] });
-  if (this.state.departure === "Seattle" & this.state.arrival === "China") this.setState({ price: this.state.values["Seattle_China"] });
-  if (this.state.departure === "Seattle" & this.state.arrival === "Inland/Railway") this.setState({ price: this.state.values["Seattle_Inland"] });
-  if (this.state.departure === "Inland/Railway" & this.state.arrival === "China") this.setState({ price: this.state.values["Inland_Seattle"] });
-  if (this.state.departure === "Inland/Railway" & this.state.arrival === "Seattle") this.setState({ price: this.state.values["Inland_Seattle"] });
-    
+  if (this.state.departure === "China" ) this.state.price = "16"  
 };
 
+findValue1 = () => {
+  if (this.state.departure === "Seattle" ) this.findA1();  
+};
 
-//to get the shippment pricing
+findValue2 = () => {
+  if (this.state.departure === "Inland" ) this.findA1();  
+};
+// if departure china is correct it will look for where it will arrive
+findA1 = () =>{
+  if (this.state.arrival === "Seattle") this.setState({price: this.state.values["China_Seattle"]})
+  else this.setState({price: this.state.values["China_Inland"]})
+}
+// if not china looking to see if seattle is the correct departure
+findD1 = () =>{
+  if (this.state.departure === "Seattle" ) this.findA2();
+  else this.findD2();
+}
+// if seattle is correct departure it will find arrival for seattle departure
+findA2 = () =>{
+  if (this.state.arrival === "China") this.setState({price: this.state.values["Seattle_China"]})
+  else this.setState({price: this.state.values["Seattle_Inland"]})
+}
+// if seattle is not correct it will find where arrival is for inland departure
+findD2 = () =>{
+  if (this.state.arrival === "China" ) this.setState({price: this.state.values["Inland_China"]})
+  else this.setState({price: this.state.values["Inland_Seattle"]})
+}
+
+  //to get the shippment pricing
 getValues = () => {
   let url = `https://api.wynum.com/getallStage/7056f8348c592492f69acfd8bc3dbe7a?token=${this.state.token}`;
   axios.get(url).then(res => {
@@ -106,7 +127,6 @@ getValues = () => {
 
 //add the new values to wynum
 addValues= () => {
-  var locationcontext = this;
   let newValues = {
     get_Price: this.state.price,
     process_ID: this.state.process_ID
@@ -157,13 +177,13 @@ addValues= () => {
       process_ID: locationcontext.state.process_ID
     };
     this.state.boxes.splice(0, 0, location);
-    console.log("token:", this.state.token);
+    // console.log("token:", this.state.token);
     const url = `https://api.wynum.com/postStage/0762ddf88093e93d1d9b06f48997a02e?token=${this.state.token}`;
-    console.log("box", location);
+    // console.log("box", location);
     var config = { headers: { "Content-Type": "application/json" } };
     axios.post(url, JSON.stringify(location), config).then(res => {
-      console.log("box after ", location);
-      console.log(res.data);
+      // console.log("box after ", location);
+      // console.log(res.data);
       this.findValue();
       this.addDefaultCharge();
       this.addValues();
