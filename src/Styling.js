@@ -12,11 +12,12 @@ import { withStyles } from "@material-ui/core/styles";
 import { makeStyles } from "@material-ui/core/styles";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
-import AccountCircle from "@material-ui/icons/AccountCircle";
+
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import DashboardIcon from "@material-ui/icons/Dashboard";
-import LibraryBooks from "@material-ui/icons/LibraryBooks";
-import LinearScale from "@material-ui/icons/LinearScale";
+import AttachMoney from "@material-ui/icons/AttachMoney";
+import AddCircle from "@material-ui/icons/AddCircle";
+
 import MenuIcon from "@material-ui/icons/Menu";
 import PeopleIcon from "@material-ui/icons/People";
 import QuestionAnswer from "@material-ui/icons/QuestionAnswer";
@@ -24,10 +25,6 @@ import classNames from "classnames";
 import PropTypes from "prop-types";
 import React from "react";
 
-import MenuItem from "@material-ui/core/MenuItem";
-import Menu from "@material-ui/core/Menu";
-import Select from "@material-ui/core/Select";
-import UserScreen from "./UserScreen";
 import BoxDimension from "./BoxDimension";
 import Report from "./Report";
 import BoxReport from "./BoxReport";
@@ -202,7 +199,7 @@ class Styling extends React.Component {
               }}
             >
               <ListItemIcon>
-                <QuestionAnswer />
+                <AttachMoney />
               </ListItemIcon>
               <ListItemText primary=" Pricing Report" />
             </ListItem>
@@ -224,11 +221,11 @@ class Styling extends React.Component {
               }}
             >
               <ListItemIcon>
-                <DashboardIcon />
+                <AddCircle />
               </ListItemIcon>
               <ListItemText primary="Add box" />
             </ListItem>
-           
+
             <ListItem
               button
               onClick={() => {
@@ -236,7 +233,7 @@ class Styling extends React.Component {
               }}
             >
               <ListItemIcon>
-                <DashboardIcon />
+                <AddCircle />
               </ListItemIcon>
               <ListItemText primary="Add Container" />
             </ListItem>
