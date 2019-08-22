@@ -79,7 +79,7 @@ class Report extends React.Component {
     this.setState({ [event.target.name]: event.target.value });
   };
 
-  getBoxes = () => {
+  getReport = () => {
     let url = `https://api.wynum.com/getallStage/0b4f81c827700d711263e4d75a395609?token=${this.state.token}`;
     //let url = `https://api.wynum.com/getallStage/71f71ac6b3200cdd83ef34725b9aa501?user_email=${this.state.email}&token=${this.state.token}`;
     axios.get(url).then(res => {
@@ -90,7 +90,7 @@ class Report extends React.Component {
 
  
   componentDidMount() {
-    this.getBoxes();
+    this.getReport();
   }
 
   render() {
@@ -99,12 +99,14 @@ class Report extends React.Component {
 
     //row headers
     const headRows = [
-      { id: "process_id", label: "Process ID" },
+    { id: "process_id", label: "Quote number" },
+      { id: "time_created", label: "Time Created" },
       { id: "total_weight", label: "Total Pallete Weight" },
       { id: "total_boxes", label: "Total Boxes" },
       { id: "to", label: "To" },
       { id: "from", label: "From" },
-      { id: "price", label: "Final Price" }
+      { id: "price", label: "Final Price" },
+      
     ];
     return (
       <Grid container className={classes.root} spacing={24}>
@@ -116,7 +118,7 @@ class Report extends React.Component {
               variant="h5"
               className={classes.exportButton}
             >
-              Shipping Calculations
+              Shipping Quotes
               <Fab
                 color="primary"
                 variant="extended"
@@ -126,12 +128,8 @@ class Report extends React.Component {
                 className={classes.exportButton}
                 value="export"
                 onClick={() => {}}
-              >
-                <CloudUploadOutlined
-                  className={classes.extendedIcon}
-                  className="cloudUploadIcon"
-                />
-                Export
+              >  
+                Add to Orders
               </Fab>
             </Typography>
           </Grid>
@@ -157,6 +155,9 @@ class Report extends React.Component {
                     <TableCell component="th" scope="row">
                       {boxes.process_ID}
                     </TableCell>
+                    <TableCell component="th" scope="row">
+                      {boxes.created_at}
+                    </TableCell>{" "}
                     <TableCell component="th" scope="row">
                       {boxes.Total_Boxes}
                     </TableCell>

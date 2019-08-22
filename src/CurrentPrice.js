@@ -52,7 +52,8 @@ class CurrentPrice extends React.Component {
     super(props);
     this.state = {
       token: props.userToken,
-      price: []
+      price: [],
+      process_ID: "",
     };
   }
 
@@ -61,7 +62,7 @@ class CurrentPrice extends React.Component {
   };
 
   getPrice = () => {
-    let url = `https://api.wynum.com/getallStage/7056f8348c592492f69acfd8bc3dbe7a?token=${this.state.token}`;
+    let url = `https://api.wynum.com/getallStage/7056f8348c592492f69acfd8bc3dbe7a?process_ID=${this.state.process_ID}&token=${this.state.token}`;
     axios.get(url).then(res => {
       console.log(res.data);
       this.setState({ price: res.data });

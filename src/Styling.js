@@ -35,6 +35,7 @@ import PalletSize from "./PalletSize";
 import CurrentPallet from "./CurrentPallet";
 import ShipmentPrice from "./ShipmentPrice";
 import CurrentPrice from "./CurrentPrice";
+import SingleReport from "./SingleReport";
 
 const drawerWidth = 240;
 
@@ -201,7 +202,7 @@ class Styling extends React.Component {
               <ListItemIcon>
                 <AttachMoney />
               </ListItemIcon>
-              <ListItemText primary=" Pricing Report" />
+              <ListItemText primary="Quotes" />
             </ListItem>
             <ListItem
               button
@@ -344,6 +345,14 @@ class Styling extends React.Component {
               
             />
           )}
+          {this.state.screen === "singlereport" && (
+          <SingleReport changeScreen={this.props.changeScreen}  
+          userToken={this.props.userToken}
+          onTokenChange={this.props.onTokenChange}
+          onProcessIdChange={this.props.onProcessIdChange}
+          ProcessID={this.state.ProcessID}/>
+
+        )}
           {/* {this.state.screen === "box_update" && (
             <UpdateBox
               changeScreen={this.props.changeScreen}

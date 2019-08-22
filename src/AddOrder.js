@@ -52,12 +52,12 @@ const styles = theme => ({
     marginTop: theme.spacing.unit * 2
   }
 });
-class Location extends React.Component {
+class AddOrder extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      arrival: "",
-      departure: "",
+      orderNumber: "",
+      yes: "Yes",
       boxes:[],
       token: props.userToken,
       apiToken: 9640783,
@@ -70,35 +70,12 @@ class Location extends React.Component {
   handleChange = event => {
     this.setState({ [event.target.name]: event.target.value });
   };
-  //handle random process ID generation
-//   makeid = length => {
-//     var result = "";
-//     var characters =
-//       "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-//     var charactersLength = characters.length;
-//     for (var i = 0; i < length; i++) {
-//       result += characters.charAt(Math.floor(Math.random() * charactersLength));
-//     }
-//     return result;
-//   };
-
-//get proper shipment pricing starts by tryig to find departure
-
-  //to get the shippment pricing
-getValues = () => {
-  let url = `https://api.wynum.com/getallStage/7056f8348c592492f69acfd8bc3dbe7a?token=${this.state.token}`;
-  axios.get(url).then(res => {
-    console.log(res.data);
-    this.setState({ values: res.data });
-    console.log(this.state.values)
-  });
-};
 
 //add the new values to wynum
-addValues= () => {
+addOrder= () => {
   let newValues = {
-    get_Price: this.state.price,
-    process_ID: this.state.process_ID
+    order: this.state.yes,
+    process_ID: this.state.orderNumber,
   };
   this.state.boxes.splice(0, 0, newValues);
   console.log("token:", this.state.token);
@@ -111,73 +88,6 @@ addValues= () => {
 };
 
   //post request to additional charges with 0 default value
-
-  addDefaultCharge = () => {
-    var chargeContext = this;
-
-    var charge = {
-      process_ID: chargeContext.state.process_ID,
-      Charge: parseInt(chargeContext.state.charge),
-      Charge2: parseInt(chargeContext.state.charge),
-      Charge3: parseInt(chargeContext.state.charge),
-      Charge4: parseInt(chargeContext.state.charge),
-      Charge5: parseInt(chargeContext.state.charge),
-      Charge6: parseInt(chargeContext.state.charge),
-      Charge7: parseInt(chargeContext.state.charge),
-      Charge8: parseInt(chargeContext.state.charge),
-      Charge9: parseInt(chargeContext.state.charge),
-      Charge10: parseInt(chargeContext.state.charge),
-
-    };
-    const url = `https://api.wynum.com/postStage/2fb39ddfdd4b3206cb3e1b387cf8c3bc?token=${this.state.token}`;
-    var config = { headers: { "Content-Type": "application/json" } };
-    axios.post(url, JSON.stringify(charge), config).then(res => {
-     // console.log(res.data);
-    });
-  };
-  
-  //post request to location
-  //addcharges call()
-  addnocharge = () => {
-    var locationcontext = this;
-    let location = {
-      shipment_Location_Departing: locationcontext.state.departure,
-      shipment_Location_Destination: locationcontext.state.arrival,
-      process_ID: locationcontext.state.process_ID
-    };
-    this.state.boxes.splice(0, 0, location);
-    // console.log("token:", this.state.token);
-    const url = `https://api.wynum.com/postStage/0762ddf88093e93d1d9b06f48997a02e?token=${this.state.token}`;
-    // console.log("box", location);
-    var config = { headers: { "Content-Type": "application/json" } };
-    axios.post(url, JSON.stringify(location), config).then(res => {
-      // console.log("box after ", location);
-      // console.log(res.data);
-      this.addDefaultCharge();
-      this.props.changeScreen("singlereport");
-    });
-  };
-
-  addcharge = () => {
-    var locationcontext2 = this;
-    let location2 = {
-        shipment_Location_Departing: locationcontext2.state.departure,
-        shipment_Location_Destination: locationcontext2.state.arrival,
-        process_ID: locationcontext2.state.process_ID
-    };
-    this.state.boxes.splice(0, 0, location2);
-    console.log("token:", this.state.token);
-    const url = `https://api.wynum.com/postStage/0762ddf88093e93d1d9b06f48997a02e?token=${this.state.token}`;
-    console.log("box", location2);
-    var config = { headers: { "Content-Type": "application/json" } };
-    axios.post(url, JSON.stringify(location2), config).then(res => {
-      console.log("box after ", location2);
-      console.log(res.data);
-      this.props.changeScreen("addcharge");
-    });
-  };
-
-  
   render() {
     const { classes } = this.props;
     return (
@@ -185,16 +95,16 @@ addValues= () => {
         <CssBaseline />
         <div className={classes.paper}>
           <Typography component="h1" variant="h5">
-            Add Shipping Location
+            Change a Quote to Order
           </Typography>
           <TextField
             id="outlined-name"
             type="text"
-            label="Arrival"
-            value={this.state.arrival}
+            label="Order Number"
+            value={this.state.orderNumber}
             onChange={this.handleChange}
             inputProps={{
-              name: "arrival"
+              name: "orderNumber"
             }}
             margin="normal"
             variant="outlined"
@@ -217,18 +127,18 @@ addValues= () => {
               variant="contained"
               color="primary"
               className={classes.button}
-              onClick={this.addcharge}
+              onClick={this.addOrder}
             >
-              Add With Additional Charges
+              Add To Order
             </Button>
-            <Button
+            {/* <Button
               variant="contained"
               color="primary"
               className={classes.button}
               onClick={this.addnocharge}
             >
               Add Without Additional Charges
-            </Button>
+            </Button> */}
             {/* <Button
               variant="contained"
               color="primary"

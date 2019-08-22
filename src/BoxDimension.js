@@ -71,6 +71,13 @@ class BoxDimension extends React.Component {
       apiToken: 9640783,
       pallet:"",
       process_ID: this.makeid(6),
+      china_Seattle: "",
+      china_Inland: "",
+      seattle_China: "",
+      seattle_Inland: "",
+      inland_China: "",
+      inland_Seattle: "",
+      pID: "",
     };
   }
 
@@ -91,21 +98,91 @@ class BoxDimension extends React.Component {
   };
   // to get the size of the pallet
   getPallet = () => {
-    let url = `https://api.wynum.com/getStage/1a57f534cbe01527ffe492a10ddf16c8?token=${this.state.token}`;
+    let url = `https://api.wynum.com/getStage/1a57f534cbe01527ffe492a10ddf16c8?process_ID=${this.state.pID}&token=${this.state.token}`;
     axios.get(url).then(res => {
       console.log(res.data);
       this.setState({ pallet: res.data["Pallet_volume"] });
+      console.log(res.data["Pallet_volume"])
       console.log(this.state.pallet)
     });
   };
 
+  // getValues = () => {
+  //   let url = `https://api.wynum.com/getallStage/7056f8348c592492f69acfd8bc3dbe7a?process_ID=${this.state.pID}&token=${this.state.token}`;
+  //   axios.get(url).then(res => {
+  //     console.log(res.data);
+  //     console.log(res.data["China_Seattle"]);
+  //     this.setState({ China_Seattle: res.data.China_Seattle });
+  //     this.setState({ China_Inland: res.data["China_Inland"] });
+  //     this.setState({ Seattle_China: res.data["Seattle_China"] });
+  //     this.setState({ Seattle_Inland: res.data["Seattle_Inland"] });
+  //     this.setState({ Inland_China: res.data["China_Seattle"] });
+  //     this.setState({ Inland_Seattle: res.data["China_Seattle"] });
+  //     console.log(this.state.China_Seattle)
+  //   });
+  // };
+
+  getCS = () => {
+    let url = `https://api.wynum.com/getStage/28fe734fa8b075c51268af9b10069863?process_ID=${this.state.pID}&token=${this.state.token}`;
+    axios.get(url).then(res => {
+      console.log(res.data);
+      this.setState({ china_Seattle: res.data["China_Seattle"]});
+      
+      console.log(this.state.china_Seattle)
+    });
+  };
+  getCI = () => {
+    let url = `https://api.wynum.com/getStage/63cf06c41364ed3d8a6b85df9ddc4645?process_ID=${this.state.pID}&token=${this.state.token}`;
+    axios.get(url).then(res => {
+      console.log(res.data);
+      this.setState({ china_Inland: res.data["China_Inland"]});
+      
+      console.log(this.state.china_Inland)
+    });
+  };
+  getSC = () => {
+    let url = `https://api.wynum.com/getStage/2a05b0b79a17d508e39b12e4103c47e4?process_ID=${this.state.pID}&token=${this.state.token}`;
+    axios.get(url).then(res => {
+      console.log(res.data);
+      this.setState({ seattle_China: res.data["Seattle_China"]});
+      
+      console.log(this.state.seattle_China)
+    });
+  };
+  getSI = () => {
+    let url = `https://api.wynum.com/getStage/e8f99f98d545efd644ed392fe1b47454?process_ID=${this.state.pID}&token=${this.state.token}`;
+    axios.get(url).then(res => {
+      console.log(res.data);
+      this.setState({ seattle_Inland: res.data["Seattle_Inland"]});
+      
+      console.log(this.state.seattle_Inland)
+    });
+  };
+  getIC = () => {
+    let url = `https://api.wynum.com/getStage/3b61c5509478eec7094cc1f1f88dae12?process_ID=${this.state.pID}&token=${this.state.token}`;
+    axios.get(url).then(res => {
+      console.log(res.data);
+      this.setState({ inland_China: res.data["Inland_China"]});
+      
+      console.log(this.state. inland_China)
+    });
+  };
+  getIS = () => {
+    let url = `https://api.wynum.com/getStage/2e7ea06e8eccfa4e9d1b8752f9ff1310?process_ID=${this.state.pID}&token=${this.state.token}`;
+    axios.get(url).then(res => {
+      console.log(res.data);
+      this.setState({ inland_Seattle: res.data["Inland_Seattle"]});
+      
+      console.log(this.state.inland_Seattle)
+    });
+  };
   
 
   // to post pallet volume to wynum
   addPallet = () => {
     var boxContext = this;
     let newPallet = {
-      New_Pallet_Volume: this.state.pallet,
+      New_Pallet_Volume: parseInt(this.state.pallet),
       process_ID: this.state.process_ID,
     };
 
@@ -114,6 +191,27 @@ class BoxDimension extends React.Component {
     const url = `https://api.wynum.com/postStage/61c8059f6f09dfac2a05cf1df2e01991?token=${this.state.token}`;
     var config = { headers: { "Content-Type": "application/json" } };
     axios.post(url, JSON.stringify(newPallet), config).then(res => {
+     
+    });
+  };
+
+  addValues = () => {
+    var boxContext = this;
+    let newValues = {
+      China_Seattle: parseInt(this.state.china_Seattle),
+      China_Inland: parseInt(this.state.china_Inland),
+      Seattle_China: parseInt(this.state.seattle_China),
+      Seattle_Inland: parseInt(this.state.seattle_Inland),
+      Inland_China: parseInt(this.state.inland_China),
+      Inland_Seattle: parseInt(this.state.inland_Seattle),
+      process_ID: this.state.process_ID,
+    };
+
+    // this.state.boxes.splice(0, 0, newPallet);
+    console.log("token:", newValues);
+    const url = `https://api.wynum.com/postStage/64ae65c2919382858545ee34a127974e?token=${this.state.token}`;
+    var config = { headers: { "Content-Type": "application/json" } };
+    axios.post(url, JSON.stringify(newValues), config).then(res => {
      
     });
   };
@@ -141,6 +239,7 @@ class BoxDimension extends React.Component {
       console.log(res.data);
     });
     this.addPallet();
+    this.addValues();
     console.log(box.process_ID);
     this.props.onProcessIdChange(box.process_ID);
     this.props.changeScreen("location");
@@ -148,6 +247,12 @@ class BoxDimension extends React.Component {
 
   componentDidMount() {
     this.getPallet();
+    this.getCS();
+    this.getCI();
+    this.getSC();
+    this.getSI();
+    this.getIC();
+    this.getIS();
   }
 
   render() {

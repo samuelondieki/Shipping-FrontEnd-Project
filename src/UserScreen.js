@@ -2,7 +2,6 @@ import React from "react";
 import BoxDimension from "./BoxDimension";
 import ConfirmCode from "./ConfirmCode";
 import SignIn from "./SignIn";
-import Display from "./Display";
 import AdditionalCharges from "./AdditionalCharges";
 import Location from "./Location"
 import Report from "./Report";
@@ -13,6 +12,7 @@ import PalletSize from "./PalletSize";
 import CurrentPallet from "./CurrentPallet";
 import CurrentPrice from "./CurrentPrice";
 import ShipmentPrice from "./ShipmentPrice";
+import SingleReport from "./SingleReport";
 
 class UserScreen extends React.Component {
   constructor(props) {
@@ -160,7 +160,14 @@ class UserScreen extends React.Component {
           ProcessID={this.state.ProcessID}/>
 
         )}
-        )
+        {this.state.screen === "singlereport" && (
+          <SingleReport changeScreen={this.changeScreen}  
+          userToken={this.state.userToken}
+          onTokenChange={this.onTokenChange}
+          onProcessIdChange={this.onProcessIdChange}
+          ProcessID={this.state.ProcessID}/>
+
+        )}
       </div>
     );
   }

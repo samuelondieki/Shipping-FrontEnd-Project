@@ -1,7 +1,9 @@
 import React from "react";
 import Grid from "@material-ui/core/Grid";
+import { spacing } from "@material-ui/system";
 import { withStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
+import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -10,12 +12,8 @@ import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import IconButton from "@material-ui/core/IconButton";
-import Create from "@material-ui/icons/Create";
-import DeleteIcon from "@material-ui/icons/Delete";
-import CloudUploadOutlined from "@material-ui/icons/CloudUpload";
-// import { ExportReactCSV } from "./ExportReactCSV";
-import Fab from "@material-ui/core/Fab";
+// import CloudUploadOutlined from "@material-ui/icons/CloudUpload";
+// import Fab from "@material-ui/core/Fab";
 import axios from "axios";
 
 const styles = theme => ({
@@ -66,62 +64,53 @@ const styles = theme => ({
   }
 });
 
-class BoxReport extends React.Component {
+class SingleReport extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      //   process_ID: "16",
+      process_ID: props.ProcessID,
       token: props.userToken,
-      process_ID:props.ProcessID,
-      boxes: []
-
+      apiToken: 7819284,
+      report: [],
     };
     console.log("token:", this.state.token);
-    console.log("process id", this.state.process_ID);
   }
 
   handleChange = event => {
     this.setState({ [event.target.name]: event.target.value });
   };
 
-  getBoxes = () => {
-    let url = `https://api.wynum.com/getallStage/63ab151382791f6eeffc70ae383daf71?token=${
-      this.state.token
-    }`;
+  getReport = () => {
+    let url = `https://api.wynum.com/getStage/1379db65dcd826c5c0b85e485a5dd66e?process_ID=${this.state.process_ID}&token=${this.state.token}`;
     axios.get(url).then(res => {
       console.log(res.data);
-      this.setState({ boxes: res.data });
+      this.setState({ report: res.data });
     });
   };
 
-  //handle edit button
-  handleEdit = box => {
-    this.props.changeToEdit(box);
-  };
-
+ 
   componentDidMount() {
-    this.getBoxes();
+    this.getReport();
   }
 
   render() {
     const { classes, order, orderBy } = this.props;
-    const types = this.state.boxes;
+    const types = this.state.report;
 
     //row headers
     const headRows = [
-      { id: "process_id", label: "Process ID" },
-      { id: "length", label: "Length" },
-      { id: "height", label: "Height" },
-      { id: "width", label: "Width" },
-      { id: "weight", label: "Weight" },
-      { id: "volume", label: "Volume" },
-      { id: "edit", label: "Edit" },
-      { id: "delete", label: "Delete" }
+      { id: "quote number", label: "Quote Number" },
+      { id: "time_created", label: "Time Created" },
+      { id: "total_weight", label: "Total Pallete Weight" },
+      { id: "total_boxes", label: "Total Boxes" },
+      { id: "to", label: "To" },
+      { id: "from", label: "From" },
+      { id: "price", label: "Final Price" },
+      
     ];
     return (
       <Grid container className={classes.root} spacing={24}>
         <CssBaseline />
-
         <div className={classes.paper}>
           <Grid item xs={12}>
             <Typography
@@ -129,8 +118,8 @@ class BoxReport extends React.Component {
               variant="h5"
               className={classes.exportButton}
             >
-              Boxes Report
-              <Fab
+              Shipping Calculations
+              {/* <Fab
                 color="primary"
                 variant="extended"
                 size="large"
@@ -145,16 +134,9 @@ class BoxReport extends React.Component {
                   className="cloudUploadIcon"
                 />
                 Export
-              </Fab>
-              {/* <div className="col-md-4 center">
-                <ExportReactCSV
-                  csvData={this.state.box}
-                  fileName={this.state.fileName}
-                />
-              </div> */}
+              </Fab> */}
             </Typography>
           </Grid>
-
           <div>
             <Table>
               <TableHead>
@@ -164,7 +146,7 @@ class BoxReport extends React.Component {
                       key={row.id}
                       align={row.numeric ? "right" : "left"}
                       padding={row.disablePadding ? "none" : "default"}
-                      sortDirection={orderBy === row.id ? order : false}
+                      // sortDirection={orderBy === row.id ? order : false}
                     >
                       <TableSortLabel>{row.label}</TableSortLabel>
                     </TableCell>
@@ -172,61 +154,61 @@ class BoxReport extends React.Component {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {types.map(boxes => (
-                  <TableRow key={boxes.process_id} hover>
+                {types.map(report => (
+                  <TableRow key={report.process_id} hover>
                     <TableCell component="th" scope="row">
-                      {boxes.process_ID}
+                      {report.process_ID}
                     </TableCell>
                     <TableCell component="th" scope="row">
-                      {boxes.Length}
-                    </TableCell>
-                    <TableCell component="th" scope="row">
-                      {boxes.Height}
+                      {report.created_at}
                     </TableCell>{" "}
                     <TableCell component="th" scope="row">
-                      {boxes.Width}
+                      {report.Total_Boxes}
+                    </TableCell>
+                    <TableCell component="th" scope="row">
+                      {report.Total_Palette_Weight}
                     </TableCell>{" "}
                     <TableCell component="th" scope="row">
-                      {boxes.Weight}
+                      {report.To}
+                    </TableCell>{" "}
+                    <TableCell component="th" scope="row">
+                      {report.From}
                     </TableCell>
                     <TableCell component="th" scope="row">
-                      {boxes.Volume}
-                    </TableCell>
-                    <TableCell>
-                      <IconButton
-                        arial-label="Edit"
-                        size="small"
-                        color="primary"
-                        // onClick={() => {
-                        //   //   this.props.changeScreen("box_update");
-
-                        //   this.handleEdit(boxes);
-                        // }}
-                      >
-                        <Create color="primary" />
-                      </IconButton>
-                    </TableCell>
-                    <TableCell>
-                      <IconButton
-                        arial-label="Delete"
-                        size="small"
-                        color="primary"
-                      >
-                        <DeleteIcon />
-                      </IconButton>
+                      {report.Final_Price}
                     </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
           </div>
+          <Button
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                onClick={() => {
+                  this.props.changeScreen("box");
+                }}
+              >
+                New Quote
+            </Button>
+            <Button
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                onClick={() => {
+                  this.props.changeScreen("dashboard");
+                }}
+              >
+                home
+            </Button>
         </div>
       </Grid>
     );
   }
 }
-BoxReport.propTypes = {
+SingleReport.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(BoxReport);
+export default withStyles(styles)(SingleReport);
